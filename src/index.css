@@ -1,0 +1,640 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap");
+
+:root {
+  font-family: "DM Sans", sans-serif;
+  color: #302d27;
+  background: #f4eedf;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #f4eedf;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(197, 154, 71, 0.09),
+      transparent 30%
+    ),
+    #f4eedf;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 3px solid rgba(184, 106, 72, 0.28);
+  outline-offset: 3px;
+}
+
+.app-shell {
+  width: min(1520px, calc(100% - 32px));
+  min-height: calc(100vh - 32px);
+  margin: 16px auto;
+  overflow: hidden;
+  background: #fcf9f2;
+  border: 1px solid #d9cebb;
+  border-radius: 24px;
+  box-shadow: 0 18px 60px rgba(65, 54, 38, 0.08);
+}
+
+.decorative-line {
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    #b86a48 0%,
+    #b86a48 32%,
+    #c59a47 32%,
+    #c59a47 63%,
+    #6a7455 63%,
+    #6a7455 100%
+  );
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 42px 48px 30px;
+}
+
+.brand-mark {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 68px;
+  height: 82px;
+  color: #fcf9f2;
+  background: #46503a;
+  border-radius: 6px 18px 18px 6px;
+  box-shadow: inset 7px 0 0 rgba(255, 255, 255, 0.12);
+  font-family: "Fraunces", serif;
+  font-size: 34px;
+  font-weight: 700;
+  transform: rotate(-2deg);
+}
+
+.header-eyebrow,
+.section-label {
+  margin: 0 0 4px;
+  color: #b86a48;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.app-header h1,
+.page-introduction h2,
+.weekly-section h2,
+.recipe-card h3 {
+  font-family: "Fraunces", serif;
+}
+
+.app-header h1 {
+  margin: 0;
+  color: #302d27;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.header-description {
+  max-width: 620px;
+  margin: 12px 0 0;
+  color: #746d61;
+  font-size: 1rem;
+}
+
+.main-navigation {
+  display: flex;
+  gap: 8px;
+  padding: 0 48px;
+  border-bottom: 1px solid #d9cebb;
+}
+
+.navigation-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 18px;
+  color: #746d61;
+  background: transparent;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.navigation-button:hover {
+  color: #46503a;
+  background: rgba(106, 116, 85, 0.06);
+}
+
+.navigation-button.active {
+  color: #46503a;
+  border-bottom-color: #6a7455;
+}
+
+.page-content {
+  padding: 44px 48px 56px;
+}
+
+.page-introduction {
+  max-width: 700px;
+  margin-bottom: 30px;
+}
+
+.page-introduction h2 {
+  margin: 0;
+  color: #302d27;
+  font-size: clamp(1.8rem, 3vw, 2.55rem);
+  font-weight: 600;
+}
+
+.page-introduction > p:last-child {
+  margin: 10px 0 0;
+  color: #746d61;
+}
+
+.planner-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.weekly-section {
+  overflow: hidden;
+  background: #fffdf8;
+  border: 1px solid #d9cebb;
+  border-radius: 18px;
+  box-shadow: 0 9px 28px rgba(70, 63, 49, 0.05);
+}
+
+.weekly-card-section {
+  overflow: visible;
+}
+
+.weekly-section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 26px 20px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(238, 227, 207, 0.75),
+      rgba(252, 249, 242, 0)
+    );
+  border-bottom: 1px solid #d9cebb;
+}
+
+.person-avatar {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  color: #fffdf8;
+  border-radius: 50% 45% 48% 42%;
+  font-family: "Fraunces", serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  transform: rotate(-3deg);
+}
+
+.weekly-section h2 {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.person-subtitle {
+  margin: 4px 0 0;
+  color: #746d61;
+  font-size: 0.86rem;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(210px, 1fr));
+  gap: 14px;
+  padding: 22px;
+  overflow-x: auto;
+  background:
+    linear-gradient(
+      rgba(252, 249, 242, 0.72),
+      rgba(244, 238, 223, 0.48)
+    );
+}
+
+.day-card {
+  min-width: 210px;
+  overflow: hidden;
+  background: #fffdf8;
+  border: 1px solid #d9cebb;
+  border-radius: 14px;
+  box-shadow: 0 7px 20px rgba(70, 63, 49, 0.05);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.day-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 11px 26px rgba(70, 63, 49, 0.09);
+}
+
+.day-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 17px 16px;
+  background: #f4eedf;
+  border-bottom: 1px solid #d9cebb;
+}
+
+.day-card-label {
+  margin: 0 0 2px;
+  color: #b86a48;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.day-card h3 {
+  margin: 0;
+  color: #46503a;
+  font-family: "Fraunces", serif;
+  font-size: 1.28rem;
+  font-weight: 600;
+}
+
+.day-card-total {
+  padding: 4px 7px;
+  color: #8e4e35;
+  background: #f5e6dc;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.day-card-meals {
+  display: flex;
+  flex-direction: column;
+}
+
+.meal-slot {
+  min-height: 105px;
+  padding: 13px;
+  border-bottom: 1px solid #e4dccd;
+}
+
+.meal-slot:last-child {
+  border-bottom: 0;
+}
+
+.meal-slot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.meal-slot-header > span {
+  color: #56746d;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.meal-add-button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: #fffdf8;
+  background: #6a7455;
+  border: 0;
+  border-radius: 50%;
+  font-size: 1rem;
+  line-height: 1;
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+
+.meal-add-button:hover {
+  background: #46503a;
+  transform: scale(1.06);
+}
+
+.meal-slot-empty {
+  margin: 16px 0 0;
+  color: #a0988a;
+  font-size: 0.73rem;
+  font-style: italic;
+}
+
+.day-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 13px 15px;
+  color: #8e4e35;
+  background: #eee3cf;
+  border-top: 1px solid #d9cebb;
+  font-size: 0.72rem;
+}
+
+.day-card-footer span {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.day-card-footer strong {
+  font-size: 0.78rem;
+}
+
+.weekly-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 18px 24px;
+  background: #eee3cf;
+  border-top: 1px solid #d9cebb;
+}
+
+.weekly-summary > div {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.weekly-summary span {
+  color: #8e4e35;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.weekly-summary strong {
+  color: #8e4e35;
+  font-family: "Fraunces", serif;
+  font-size: 1.2rem;
+}
+
+.weekly-summary p {
+  margin: 0;
+  color: #746d61;
+  font-size: 0.78rem;
+}
+
+.recipes-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.primary-button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 17px;
+  color: #fffdf8;
+  background: #6a7455;
+  border: 1px solid #6a7455;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 5px 14px rgba(70, 80, 58, 0.16);
+}
+
+.primary-button:hover {
+  background: #46503a;
+  border-color: #46503a;
+}
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.recipe-card {
+  position: relative;
+  padding: 24px;
+  overflow: hidden;
+  background: #fffdf8;
+  border: 1px solid #d9cebb;
+  border-radius: 15px 19px 13px 17px;
+  box-shadow: 0 9px 25px rgba(70, 63, 49, 0.05);
+}
+
+.recipe-card::after {
+  position: absolute;
+  right: -18px;
+  bottom: -25px;
+  width: 90px;
+  height: 90px;
+  content: "";
+  background: rgba(197, 154, 71, 0.11);
+  border-radius: 50%;
+}
+
+.recipe-card-top,
+.recipe-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.recipe-number {
+  color: #b86a48;
+  font-family: "Fraunces", serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.recipe-calories {
+  padding: 5px 8px;
+  color: #8e4e35;
+  background: #f5e6dc;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.recipe-card h3 {
+  margin: 24px 0 8px;
+  font-size: 1.45rem;
+  font-weight: 600;
+}
+
+.recipe-card > p {
+  min-height: 48px;
+  margin: 0 0 22px;
+  color: #746d61;
+  font-size: 0.9rem;
+}
+
+.recipe-card-footer {
+  position: relative;
+  z-index: 1;
+  padding-top: 16px;
+  border-top: 1px solid #ded5c5;
+  color: #56746d;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.text-button {
+  color: #6a7455;
+  background: transparent;
+  border: 0;
+  font-weight: 700;
+}
+
+.text-button:hover {
+  color: #46503a;
+  text-decoration: underline;
+}
+
+.app-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 48px;
+  color: #746d61;
+  background: #eee3cf;
+  border-top: 1px solid #d9cebb;
+  font-size: 0.8rem;
+}
+
+.app-footer span:first-child {
+  color: #46503a;
+  font-family: "Fraunces", serif;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    width: min(100% - 18px, 1520px);
+    margin: 9px auto;
+    border-radius: 18px;
+  }
+
+  .app-header,
+  .page-content {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .main-navigation {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .recipe-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .days-grid {
+    grid-template-columns: repeat(7, 210px);
+  }
+}
+
+@media (max-width: 640px) {
+  .app-header {
+    align-items: flex-start;
+    padding-top: 30px;
+  }
+
+  .brand-mark {
+    width: 52px;
+    height: 64px;
+    font-size: 26px;
+  }
+
+  .header-description {
+    font-size: 0.9rem;
+  }
+
+  .main-navigation {
+    overflow-x: auto;
+  }
+
+  .navigation-button {
+    white-space: nowrap;
+  }
+
+  .page-content {
+    padding-top: 32px;
+  }
+
+  .recipes-heading {
+    flex-direction: column;
+  }
+
+  .recipe-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .primary-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .days-grid {
+    grid-template-columns: repeat(7, 190px);
+    padding: 16px;
+  }
+
+  .day-card {
+    min-width: 190px;
+  }
+
+  .weekly-summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .app-footer {
+    flex-direction: column;
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+}
