@@ -10,6 +10,17 @@ const DAYS = [
   "Domingo",
 ];
 
+function getMealCalories(meal) {
+  if (!meal) {
+    return 0;
+  }
+
+  const servings = meal.servings ?? 1;
+  const baseCalories = meal.baseCalories ?? meal.calories ?? 0;
+
+  return Math.round(baseCalories * servings);
+}
+
 function WeeklyTable({
   person,
   subtitle,
@@ -17,6 +28,7 @@ function WeeklyTable({
   planner,
   onOpenSelector,
   onRemoveMeal,
+  onChangeServings,
 }) {
   const personPlanner = planner[person] || {};
 
@@ -24,7 +36,7 @@ function WeeklyTable({
     const dayMeals = personPlanner[day] || {};
 
     const dayTotal = Object.values(dayMeals).reduce(
-      (total, meal) => total + (meal?.calories || 0),
+      (total, meal) => total + getMealCalories(meal),
       0,
     );
 
@@ -56,6 +68,7 @@ function WeeklyTable({
             meals={personPlanner[day]}
             onOpenSelector={onOpenSelector}
             onRemoveMeal={onRemoveMeal}
+            onChangeServings={onChangeServings}
           />
         ))}
       </div>

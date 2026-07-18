@@ -2,15 +2,27 @@ import MealSlot from "./MealSlot";
 
 const MEALS = ["Desayuno", "Almuerzo", "Once", "Cena"];
 
+function getMealCalories(meal) {
+  if (!meal) {
+    return 0;
+  }
+
+  const servings = meal.servings ?? 1;
+  const baseCalories = meal.baseCalories ?? meal.calories ?? 0;
+
+  return Math.round(baseCalories * servings);
+}
+
 function DayCard({
   person,
   day,
   meals,
   onOpenSelector,
   onRemoveMeal,
+  onChangeServings,
 }) {
   const totalCalories = MEALS.reduce((total, mealName) => {
-    return total + (meals?.[mealName]?.calories || 0);
+    return total + getMealCalories(meals?.[mealName]);
   }, 0);
 
   return (
@@ -44,6 +56,14 @@ function DayCard({
                 person,
                 day,
                 meal: mealName,
+              })
+            }
+            onChangeServings={(change) =>
+              onChangeServings({
+                person,
+                day,
+                meal: mealName,
+                change,
               })
             }
           />

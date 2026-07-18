@@ -40,7 +40,8 @@ function Planner({ recipes }) {
             id: recipe.id,
             name: recipe.name,
             portion: recipe.portion,
-            calories: recipe.calories,
+            baseCalories: recipe.calories,
+            servings: person === "Leo" ? 1.5 : 1,
           },
         },
       },
@@ -56,6 +57,45 @@ function Planner({ recipes }) {
       delete updatedPlanner[person]?.[day]?.[meal];
 
       return updatedPlanner;
+    });
+  }
+
+  function handleChangeServings({
+    person,
+    day,
+    meal,
+    change,
+  }) {
+    setPlanner((currentPlanner) => {
+      const selectedMeal = currentPlanner[person]?.[day]?.[meal];
+
+      if (!selectedMeal) {
+        return currentPlanner;
+      }
+
+      const currentServings = selectedMeal.servings ?? 1;
+
+      const newServings = Math.max(
+        0.5,
+        Number((currentServings + change).toFixed(1)),
+      );
+
+      return {
+        ...currentPlanner,
+
+        [person]: {
+          ...currentPlanner[person],
+
+          [day]: {
+            ...currentPlanner[person]?.[day],
+
+            [meal]: {
+              ...selectedMeal,
+              servings: newServings,
+            },
+          },
+        },
+      };
     });
   }
 
@@ -86,6 +126,7 @@ function Planner({ recipes }) {
           planner={planner}
           onOpenSelector={setSelectedSlot}
           onRemoveMeal={handleRemoveMeal}
+          onChangeServings={handleChangeServings}
         />
 
         <WeeklyTable
@@ -95,6 +136,7 @@ function Planner({ recipes }) {
           planner={planner}
           onOpenSelector={setSelectedSlot}
           onRemoveMeal={handleRemoveMeal}
+          onChangeServings={handleChangeServings}
         />
       </div>
 
