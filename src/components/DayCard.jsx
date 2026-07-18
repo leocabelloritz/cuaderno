@@ -1,8 +1,18 @@
 import MealSlot from "./MealSlot";
 
-const MEALS = ["Desayuno", "Almuerzo", "Merienda", "Cena"];
+const MEALS = ["Desayuno", "Almuerzo", "Once", "Cena"];
 
-function DayCard({ day, person }) {
+function DayCard({
+  person,
+  day,
+  meals,
+  onOpenSelector,
+  onRemoveMeal,
+}) {
+  const totalCalories = MEALS.reduce((total, mealName) => {
+    return total + (meals?.[mealName]?.calories || 0);
+  }, 0);
+
   return (
     <article className="day-card">
       <header className="day-card-header">
@@ -11,23 +21,38 @@ function DayCard({ day, person }) {
           <h3>{day}</h3>
         </div>
 
-        <span className="day-card-total">0 kcal</span>
+        <span className="day-card-total">
+          {totalCalories} kcal
+        </span>
       </header>
 
       <div className="day-card-meals">
-        {MEALS.map((meal) => (
+        {MEALS.map((mealName) => (
           <MealSlot
-            key={`${person}-${day}-${meal}`}
-            meal={meal}
-            person={person}
-            day={day}
+            key={mealName}
+            meal={mealName}
+            selectedMeal={meals?.[mealName]}
+            onAddMeal={() =>
+              onOpenSelector({
+                person,
+                day,
+                meal: mealName,
+              })
+            }
+            onRemoveMeal={() =>
+              onRemoveMeal({
+                person,
+                day,
+                meal: mealName,
+              })
+            }
           />
         ))}
       </div>
 
       <footer className="day-card-footer">
         <span>Total diario</span>
-        <strong>0 kcal</strong>
+        <strong>{totalCalories} kcal</strong>
       </footer>
     </article>
   );

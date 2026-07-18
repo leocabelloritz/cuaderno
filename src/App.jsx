@@ -3,9 +3,16 @@ import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import Planner from "./pages/Planner";
 import Recipes from "./pages/Recipes";
+import useRecipes from "./hooks/useRecipes";
 
 function App() {
   const [activeView, setActiveView] = useState("planner");
+
+  const {
+    recipes,
+    addRecipe,
+    deleteRecipe,
+  } = useRecipes();
 
   return (
     <div className="app-shell">
@@ -18,7 +25,15 @@ function App() {
         onChangeView={setActiveView}
       />
 
-      {activeView === "planner" ? <Planner /> : <Recipes />}
+      {activeView === "planner" ? (
+        <Planner recipes={recipes} />
+      ) : (
+        <Recipes
+          recipes={recipes}
+          onAddRecipe={addRecipe}
+          onDeleteRecipe={deleteRecipe}
+        />
+      )}
 
       <footer className="app-footer">
         <span>Cuaderno</span>

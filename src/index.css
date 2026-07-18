@@ -696,7 +696,163 @@ button:focus-visible {
   margin: 8px 0 0;
   color: #746d61;
 }
+.available-recipes-count {
+  display: inline-flex;
+  margin-top: 16px !important;
+  padding: 7px 11px;
+  color: #46503a !important;
+  background: #eee3cf;
+  border: 1px solid #d9cebb;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+.selector-modal {
+  width: min(650px, 100%);
+}
 
+.recipe-search {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 20px;
+  color: #46503a;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.recipe-search input {
+  width: 100%;
+  padding: 12px 13px;
+  color: #302d27;
+  background: #fffdf8;
+  border: 1px solid #d9cebb;
+  border-radius: 9px;
+  outline: none;
+}
+
+.recipe-search input:focus {
+  border-color: #6a7455;
+  box-shadow: 0 0 0 3px rgba(106, 116, 85, 0.13);
+}
+
+.recipe-selector-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.recipe-selector-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  background: #fffdf8;
+  border: 1px solid #d9cebb;
+  border-radius: 12px;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+
+.recipe-selector-option:hover {
+  background: #f4eedf;
+  border-color: #a99d88;
+  transform: translateY(-1px);
+}
+
+.recipe-selector-option > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.recipe-selector-option strong {
+  color: #302d27;
+  font-family: "Fraunces", serif;
+  font-size: 1rem;
+}
+
+.recipe-selector-option > div span {
+  color: #746d61;
+  font-size: 0.76rem;
+}
+
+.selector-empty-state {
+  padding: 36px 20px;
+  text-align: center;
+  background: #fffdf8;
+  border: 1px dashed #d5c8b2;
+  border-radius: 12px;
+}
+
+.selector-empty-state h3 {
+  margin: 0;
+  font-family: "Fraunces", serif;
+}
+
+.selector-empty-state p {
+  margin: 7px 0 0;
+  color: #746d61;
+}
+
+.selected-meal {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 13px;
+  padding: 11px;
+  background: #f4eedf;
+  border: 1px solid #ded5c5;
+  border-radius: 10px;
+}
+
+.selected-meal > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.selected-meal strong {
+  overflow: hidden;
+  color: #302d27;
+  font-family: "Fraunces", serif;
+  font-size: 0.88rem;
+  text-overflow: ellipsis;
+}
+
+.selected-meal span {
+  color: #746d61;
+  font-size: 0.68rem;
+}
+
+.remove-meal-button {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: #a55338;
+  background: transparent;
+  border: 1px solid #d9cebb;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.remove-meal-button:hover {
+  color: #fffdf8;
+  background: #a55338;
+  border-color: #a55338;
+}
 @media (max-width: 900px) {
   .app-shell {
     width: min(100% - 18px, 1520px);

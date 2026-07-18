@@ -1,13 +1,15 @@
 import { useState } from "react";
 import RecipeForm from "../components/RecipeForm";
-import useRecipes from "../hooks/useRecipes";
 
-function Recipes() {
+function Recipes({
+  recipes,
+  onAddRecipe,
+  onDeleteRecipe,
+}) {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const { recipes, addRecipe, deleteRecipe } = useRecipes();
 
   function handleAddRecipe(recipeData) {
-    addRecipe(recipeData);
+    onAddRecipe(recipeData);
     setIsFormOpen(false);
   }
 
@@ -54,7 +56,8 @@ function Recipes() {
               <h3>{recipe.name}</h3>
 
               <p>
-                {recipe.description || "Preparación sin descripción."}
+                {recipe.description ||
+                  "Preparación sin descripción."}
               </p>
 
               <div className="recipe-card-footer">
@@ -63,7 +66,7 @@ function Recipes() {
                 <button
                   type="button"
                   className="delete-button"
-                  onClick={() => deleteRecipe(recipe.id)}
+                  onClick={() => onDeleteRecipe(recipe.id)}
                   aria-label={`Eliminar ${recipe.name}`}
                 >
                   Eliminar

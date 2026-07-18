@@ -10,39 +10,67 @@ const DAYS = [
   "Domingo",
 ];
 
-function WeeklyTable({ person, subtitle, accent }) {
+function WeeklyTable({
+  person,
+  subtitle,
+  accent,
+  planner,
+  onOpenSelector,
+  onRemoveMeal,
+}) {
+  const personPlanner = planner[person] || {};
+
+  const weeklyCalories = DAYS.reduce((weekTotal, day) => {
+    const dayMeals = personPlanner[day] || {};
+
+    const dayTotal = Object.values(dayMeals).reduce(
+      (total, meal) => total + (meal?.calories || 0),
+      0,
+    );
+
+    return weekTotal + dayTotal;
+  }, 0);
+
   return (
     <section className="weekly-section weekly-card-section">
-      <div className="weekly-section-header">
+      <header className="weekly-section-header">
         <div
           className="person-avatar"
           style={{ backgroundColor: accent }}
-          aria-hidden="true"
         >
           {person.charAt(0)}
         </div>
 
         <div>
-          <p className="section-label">Menú semanal</p>
           <h2>{person}</h2>
           <p className="person-subtitle">{subtitle}</p>
         </div>
-      </div>
+      </header>
 
       <div className="days-grid">
         {DAYS.map((day) => (
-          <DayCard key={`${person}-${day}`} day={day} person={person} />
+          <DayCard
+            key={day}
+            person={person}
+            day={day}
+            meals={personPlanner[day]}
+            onOpenSelector={onOpenSelector}
+            onRemoveMeal={onRemoveMeal}
+          />
         ))}
       </div>
 
-      <div className="weekly-summary">
+      <footer className="weekly-summary">
         <div>
           <span>Total semanal</span>
-          <strong>0 kcal</strong>
+          <strong>{weeklyCalories} kcal</strong>
         </div>
 
-        <p>Las calorías se calcularán al agregar preparaciones.</p>
-      </div>
+        <p>
+          Promedio diario:{" "}
+          {Math.round(weeklyCalories / DAYS.length)} kcal
+        </p>
+      </footer>
     </section>
   );
 }
