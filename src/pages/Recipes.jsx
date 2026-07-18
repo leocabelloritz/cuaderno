@@ -1,28 +1,16 @@
-const SAMPLE_RECIPES = [
-  {
-    id: 1,
-    name: "Avena con banana",
-    portion: "1 bowl",
-    calories: 320,
-    description: "Avena cocida con leche y banana en rodajas.",
-  },
-  {
-    id: 2,
-    name: "Arroz integral",
-    portion: "1 taza",
-    calories: 216,
-    description: "Arroz integral cocido y ligeramente sazonado.",
-  },
-  {
-    id: 3,
-    name: "Ensalada de vegetales",
-    portion: "1 plato",
-    calories: 90,
-    description: "Lechuga, tomate, pepino y aliño de la casa.",
-  },
-];
+import { useState } from "react";
+import RecipeForm from "../components/RecipeForm";
+import useRecipes from "../hooks/useRecipes";
 
 function Recipes() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const { recipes, addRecipe, deleteRecipe } = useRecipes();
+
+  function handleAddRecipe(recipeData) {
+    addRecipe(recipeData);
+    setIsFormOpen(false);
+  }
+
   return (
     <main className="page-content">
       <div className="recipes-heading">
@@ -30,43 +18,68 @@ function Recipes() {
           <p className="section-label">Base de datos</p>
           <h2>Preparaciones</h2>
           <p>
-            Aquí guardaremos los platos que después podrás incorporar al menú
-            semanal.
+            Guarda los platos que después podrás incorporar al menú semanal.
           </p>
         </div>
 
-        <button type="button" className="primary-button">
+        <button
+          type="button"
+          className="primary-button"
+          onClick={() => setIsFormOpen(true)}
+        >
           <span aria-hidden="true">＋</span>
           Nueva preparación
         </button>
       </div>
 
-      <div className="recipe-grid">
-        {SAMPLE_RECIPES.map((recipe) => (
-          <article className="recipe-card" key={recipe.id}>
-            <div className="recipe-card-top">
-              <span className="recipe-number">
-                {String(recipe.id).padStart(2, "0")}
-              </span>
+      {recipes.length === 0 ? (
+        <div className="empty-recipes">
+          <h3>Aún no hay preparaciones</h3>
+          <p>Crea tu primer plato para comenzar el recetario.</p>
+        </div>
+      ) : (
+        <div className="recipe-grid">
+          {recipes.map((recipe, index) => (
+            <article className="recipe-card" key={recipe.id}>
+              <div className="recipe-card-top">
+                <span className="recipe-number">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
 
-              <span className="recipe-calories">
-                {recipe.calories} kcal
-              </span>
-            </div>
+                <span className="recipe-calories">
+                  {recipe.calories} kcal
+                </span>
+              </div>
 
-            <h3>{recipe.name}</h3>
-            <p>{recipe.description}</p>
+              <h3>{recipe.name}</h3>
 
-            <div className="recipe-card-footer">
-              <span>{recipe.portion}</span>
+              <p>
+                {recipe.description || "Preparación sin descripción."}
+              </p>
 
-              <button type="button" className="text-button">
-                Editar
-              </button>
-            </div>
-          </article>
-        ))}
-      </div>
+              <div className="recipe-card-footer">
+                <span>{recipe.portion}</span>
+
+                <button
+                  type="button"
+                  className="delete-button"
+                  onClick={() => deleteRecipe(recipe.id)}
+                  aria-label={`Eliminar ${recipe.name}`}
+                >
+                  Eliminar
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+
+      {isFormOpen && (
+        <RecipeForm
+          onSubmit={handleAddRecipe}
+          onCancel={() => setIsFormOpen(false)}
+        />
+      )}
     </main>
   );
 }
