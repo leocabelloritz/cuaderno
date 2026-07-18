@@ -23,12 +23,14 @@ function getMealCalories(meal) {
 
 function WeeklyTable({
   person,
+  targetPerson,
   subtitle,
   accent,
   planner,
   onOpenSelector,
   onRemoveMeal,
   onChangeServings,
+  onCopyDay,
 }) {
   const personPlanner = planner[person] || {};
 
@@ -64,11 +66,13 @@ function WeeklyTable({
           <DayCard
             key={day}
             person={person}
+            targetPerson={targetPerson}
             day={day}
             meals={personPlanner[day]}
             onOpenSelector={onOpenSelector}
             onRemoveMeal={onRemoveMeal}
             onChangeServings={onChangeServings}
+            onCopyDay={onCopyDay}
           />
         ))}
       </div>

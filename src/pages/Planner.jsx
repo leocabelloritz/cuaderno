@@ -99,6 +99,38 @@ function Planner({ recipes }) {
     });
   }
 
+  function handleCopyDay({ fromPerson, toPerson, day }) {
+    setPlanner((currentPlanner) => {
+      const sourceMeals = currentPlanner[fromPerson]?.[day];
+
+      if (!sourceMeals || Object.keys(sourceMeals).length === 0) {
+        return currentPlanner;
+      }
+
+      const targetServings = toPerson === "Leo" ? 1.5 : 1;
+
+      const copiedMeals = Object.fromEntries(
+        Object.entries(sourceMeals).map(([mealName, mealData]) => [
+          mealName,
+          {
+            ...mealData,
+            servings: targetServings,
+          },
+        ]),
+      );
+
+      return {
+        ...currentPlanner,
+
+        [toPerson]: {
+          ...currentPlanner[toPerson],
+
+          [day]: copiedMeals,
+        },
+      };
+    });
+  }
+
   return (
     <main className="page-content">
       <div className="page-introduction">
@@ -121,22 +153,26 @@ function Planner({ recipes }) {
       <div className="planner-stack">
         <WeeklyTable
           person="Victoria"
+          targetPerson="Leo"
           subtitle="Porción base: 1"
           accent={colors.terracotta}
           planner={planner}
           onOpenSelector={setSelectedSlot}
           onRemoveMeal={handleRemoveMeal}
           onChangeServings={handleChangeServings}
+          onCopyDay={handleCopyDay}
         />
 
         <WeeklyTable
           person="Leo"
+          targetPerson="Victoria"
           subtitle="Porción base sugerida: 1,5"
           accent={colors.olive}
           planner={planner}
           onOpenSelector={setSelectedSlot}
           onRemoveMeal={handleRemoveMeal}
           onChangeServings={handleChangeServings}
+          onCopyDay={handleCopyDay}
         />
       </div>
 

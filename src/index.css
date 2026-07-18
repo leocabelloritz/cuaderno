@@ -949,6 +949,33 @@ button:focus-visible {
   font-family: "DM Sans", sans-serif;
   font-size: 0.72rem;
 }
+.day-card-footer > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.copy-day-button {
+  padding: 6px 8px;
+  color: #46503a;
+  background: rgba(255, 253, 248, 0.65);
+  border: 1px solid #cfc3af;
+  border-radius: 7px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.copy-day-button:hover:not(:disabled) {
+  color: #fffdf8;
+  background: #6a7455;
+  border-color: #6a7455;
+}
+
+.copy-day-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
 @media (max-width: 900px) {
   .app-shell {
     width: min(100% - 18px, 1520px);
