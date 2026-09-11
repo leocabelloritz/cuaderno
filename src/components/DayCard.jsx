@@ -1,6 +1,6 @@
 import MealSlot from "./MealSlot";
 
-const MEALS = ["Desayuno", "Almuerzo", "Once", "Cena"];
+const MEALS = ["Desayuno", "Merienda", "Almuerzo", "Cena"];
 
 function getMealCalories(meal) {
   if (!meal) {
