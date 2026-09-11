@@ -5,11 +5,31 @@ import { colors } from "../styles/theme";
 
 const STORAGE_KEY = "cuaderno-planner";
 
+function migrateMealNames(planner) {
+  const migratedPlanner = structuredClone(planner || {});
+
+  Object.values(migratedPlanner).forEach((personPlanner) => {
+    Object.values(personPlanner || {}).forEach((dayPlanner) => {
+      if (dayPlanner?.Once && !dayPlanner?.Merienda) {
+        dayPlanner.Merienda = dayPlanner.Once;
+      }
+
+      if (dayPlanner?.Once) {
+        delete dayPlanner.Once;
+      }
+    });
+  });
+
+  return migratedPlanner;
+}
+
 function getStoredPlanner() {
   try {
     const storedPlanner = localStorage.getItem(STORAGE_KEY);
 
-    return storedPlanner ? JSON.parse(storedPlanner) : {};
+    return storedPlanner
+      ? migrateMealNames(JSON.parse(storedPlanner))
+      : {};
   } catch (error) {
     console.error("No fue posible cargar el planificador:", error);
     return {};
@@ -135,6 +155,15 @@ function Planner({ recipes }) {
   }
 
   function handleExportPdf() {
+    const previousTitle = document.title;
+
+    const restoreTitle = () => {
+      document.title = previousTitle;
+      window.removeEventListener("afterprint", restoreTitle);
+    };
+
+    document.title = "";
+    window.addEventListener("afterprint", restoreTitle);
     window.print();
   }
 
