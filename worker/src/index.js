@@ -14,7 +14,7 @@ function corsHeaders(request) {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Vary": "Origin",
+    Vary: "Origin",
   };
 }
 
@@ -26,32 +26,6 @@ function jsonResponse(request, data, status = 200) {
       ...corsHeaders(request),
     },
   });
-}
-
-function extractJson(text) {
-  if (typeof text !== "string") {
-    return text;
-  }
-
-  const clean = text
-    .trim()
-    .replace(/^```json\s*/i, "")
-    .replace(/^```\s*/i, "")
-    .replace(/```$/i, "")
-    .trim();
-
-  try {
-    return JSON.parse(clean);
-  } catch {
-    const firstBrace = clean.indexOf("{");
-    const lastBrace = clean.lastIndexOf("}");
-
-    if (firstBrace >= 0 && lastBrace > firstBrace) {
-      return JSON.parse(clean.slice(firstBrace, lastBrace + 1));
-    }
-
-    throw new Error("La IA no devolvió un resultado estructurado.");
-  }
 }
 
 function normalizeResult(result) {
@@ -89,6 +63,42 @@ function normalizeResult(result) {
   };
 }
 
+const NUTRITION_SCHEMA = {
+  type: "object",
+  properties: {
+    portionGrams: { type: "number" },
+    portionLabel: { type: "string" },
+    calories: { type: "number" },
+    protein: { type: "number" },
+    carbs: { type: "number" },
+    fat: { type: "number" },
+    description: { type: "string" },
+    ingredients: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+          grams: { type: "number" },
+        },
+        required: ["name", "grams"],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: [
+    "portionGrams",
+    "portionLabel",
+    "calories",
+    "protein",
+    "carbs",
+    "fat",
+    "description",
+    "ingredients",
+  ],
+  additionalProperties: false,
+};
+
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") {
@@ -104,6 +114,7 @@ export default {
       return jsonResponse(request, {
         ok: true,
         service: "cuaderno-nutrition-ai",
+        model: "llama-3.1-8b-instruct-fast",
       });
     }
 
@@ -135,25 +146,27 @@ export default {
       large: "porción grande para un adulto",
     }[portionSize];
 
-    const systemPrompt = `Eres el estimador nutricional de Cuaderno, una app doméstica para planificar comidas en Chile.\n\nTu tarea es estimar UNA porción servida y razonable de un plato a partir de su nombre y detalles. No inventes precisión clínica: usa valores centrales y plausibles. Considera preparaciones y porciones habituales en Chile cuando corresponda.\n\nDescompón el plato en hasta 10 componentes principales con gramos estimados. Calcula calorías, proteínas, carbohidratos y grasas de la porción completa. Los macros deben ser coherentes con las calorías de forma aproximada.\n\nDevuelve SOLO JSON válido, sin markdown ni comentarios, usando exactamente esta estructura:\n{\n  "portionGrams": 420,\n  "portionLabel": "1 plato · 420 g aprox.",\n  "calories": 560,\n  "protein": 24.5,\n  "carbs": 76.2,\n  "fat": 18.1,\n  "description": "Descripción corta y neutral del plato",\n  "ingredients": [\n    { "name": "Ingrediente", "grams": 100 }\n  ]\n}`;
+    const systemPrompt = `Eres el estimador nutricional de Cuaderno, una app doméstica para planificar comidas en Chile.\n\nEstima UNA porción servida y razonable a partir del nombre del plato y sus detalles. Usa valores centrales y plausibles; no inventes precisión clínica. Considera preparaciones y porciones habituales en Chile cuando corresponda.\n\nDescompón el plato en hasta 10 componentes principales con gramos estimados. Calcula calorías, proteínas, carbohidratos y grasas de la porción completa. Los macros deben ser coherentes con las calorías de forma aproximada.`;
 
     const userPrompt = `Plato: ${name}\nTamaño solicitado: ${sizeGuide}\nDetalles aportados: ${description || "sin detalles adicionales"}`;
 
     try {
-      const aiResponse = await env.AI.run("@cf/google/gemma-4-26b-a4b-it", {
+      const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fast", {
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        max_tokens: 650,
+        max_tokens: 700,
         temperature: 0.2,
-        chat_template_kwargs: {
-          enable_thinking: false,
+        response_format: {
+          type: "json_schema",
+          json_schema: NUTRITION_SCHEMA,
         },
       });
 
       const rawResult = aiResponse?.response ?? aiResponse;
-      const parsed = extractJson(rawResult);
+      const parsed =
+        typeof rawResult === "string" ? JSON.parse(rawResult) : rawResult;
       const normalized = normalizeResult(parsed);
 
       return jsonResponse(request, normalized);
@@ -164,7 +177,7 @@ export default {
         request,
         {
           error:
-            "No pudimos estimar este plato ahora. Prueba agregando un poco más de detalle.",
+            "No pudimos estimar este plato ahora. Intenta nuevamente en unos segundos.",
         },
         502,
       );
