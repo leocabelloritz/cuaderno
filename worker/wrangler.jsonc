@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "cuaderno-nutrition-ai",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-11",
+  "workers_dev": true,
+  "ai": {
+    "binding": "AI"
+  }
+}
