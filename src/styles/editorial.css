@@ -1,0 +1,753 @@
+:root {
+  --paper: #f6f0e4;
+  --paper-deep: #e9deca;
+  --paper-light: #fffdf8;
+  --ink: #2f2b25;
+  --ink-soft: #776f63;
+  --olive: #596347;
+  --olive-dark: #3f4734;
+  --terracotta: #b76848;
+  --gold: #b88f49;
+  --line: #d8ccb8;
+}
+
+body {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(184, 143, 73, 0.11), transparent 26%),
+    linear-gradient(rgba(92, 76, 54, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(92, 76, 54, 0.02) 1px, transparent 1px),
+    var(--paper);
+  background-size: auto, 28px 28px, 28px 28px, auto;
+}
+
+.app-shell {
+  width: min(1580px, calc(100% - 26px));
+  margin: 13px auto;
+  background: rgba(255, 253, 248, 0.96);
+  border-color: rgba(117, 96, 67, 0.26);
+  border-radius: 18px;
+  box-shadow: 0 26px 70px rgba(64, 50, 31, 0.1);
+}
+
+.decorative-line {
+  height: 4px;
+  background: linear-gradient(90deg, var(--terracotta) 0 22%, var(--gold) 22% 45%, var(--olive) 45% 100%);
+}
+
+.app-header {
+  position: relative;
+  align-items: flex-end;
+  gap: 28px;
+  padding: 46px 54px 34px;
+}
+
+.app-header::after {
+  position: absolute;
+  right: 54px;
+  bottom: 24px;
+  width: 140px;
+  height: 1px;
+  content: "";
+  background: var(--line);
+}
+
+.brand-mark {
+  width: 72px;
+  height: 94px;
+  background: var(--olive-dark);
+  border-radius: 4px 18px 18px 4px;
+  box-shadow:
+    inset 8px 0 0 rgba(255, 255, 255, 0.1),
+    0 10px 24px rgba(63, 71, 52, 0.18);
+  transform: rotate(-1.5deg);
+}
+
+.header-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.header-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 880px;
+}
+
+.header-edition {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-header h1 {
+  margin-top: 4px;
+  font-size: clamp(3rem, 7vw, 5.4rem);
+  letter-spacing: -0.035em;
+}
+
+.header-description {
+  max-width: 680px;
+  margin-top: 14px;
+  font-family: "Fraunces", serif;
+  font-size: clamp(1rem, 1.8vw, 1.18rem);
+  line-height: 1.5;
+}
+
+.main-navigation {
+  gap: 22px;
+  padding: 0 54px;
+  background: rgba(246, 240, 228, 0.58);
+}
+
+.navigation-button {
+  padding: 16px 2px 14px;
+  border-bottom-width: 2px;
+  font-size: 0.84rem;
+  letter-spacing: 0.02em;
+}
+
+.navigation-button span {
+  opacity: 0.72;
+}
+
+.page-content {
+  padding: 50px 54px 64px;
+}
+
+.planner-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 34px;
+}
+
+.planner-intro .page-introduction {
+  margin-bottom: 0;
+}
+
+.page-introduction {
+  max-width: 760px;
+}
+
+.page-introduction h2 {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  letter-spacing: -0.025em;
+  line-height: 1.03;
+}
+
+.page-introduction > p:not(.section-label):not(.available-recipes-count) {
+  max-width: 640px;
+  color: var(--ink-soft);
+  font-family: "Fraunces", serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.available-recipes-count {
+  border-radius: 2px;
+  background: transparent;
+  border-color: var(--line);
+  letter-spacing: 0.03em;
+}
+
+.planner-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 9px;
+}
+
+.planner-actions-note {
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pdf-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 18px;
+  color: var(--paper-light);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  font-weight: 700;
+  box-shadow: 5px 5px 0 var(--paper-deep);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.pdf-button:hover {
+  background: var(--olive-dark);
+  transform: translate(-1px, -1px);
+  box-shadow: 7px 7px 0 var(--paper-deep);
+}
+
+.planner-stack {
+  gap: 42px;
+}
+
+.weekly-section {
+  border-radius: 4px;
+  border-color: var(--line);
+  box-shadow: 0 13px 32px rgba(69, 55, 34, 0.055);
+}
+
+.weekly-section-header {
+  padding: 25px 28px;
+  background:
+    linear-gradient(90deg, rgba(233, 222, 202, 0.76), rgba(255, 253, 248, 0.52));
+}
+
+.person-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  box-shadow: 0 4px 0 rgba(47, 43, 37, 0.08);
+}
+
+.person-heading-copy {
+  display: grid;
+}
+
+.weekly-kicker {
+  margin: 0 0 2px;
+  color: var(--terracotta);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.weekly-section h2 {
+  font-size: 1.95rem;
+}
+
+.days-grid {
+  gap: 12px;
+  padding: 18px;
+  background: rgba(246, 240, 228, 0.5);
+}
+
+.day-card {
+  min-width: 214px;
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+.day-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(70, 63, 49, 0.08);
+}
+
+.day-card-header {
+  position: relative;
+  padding: 18px 16px 16px;
+  background: var(--paper-light);
+}
+
+.day-card-header::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 42px;
+  height: 3px;
+  content: "";
+  background: var(--terracotta);
+}
+
+.day-card-label {
+  color: var(--ink-soft);
+}
+
+.day-card h3 {
+  font-size: 1.35rem;
+}
+
+.day-card-total,
+.recipe-calories {
+  color: #84462f;
+  background: #f0dfd5;
+  border-radius: 2px;
+}
+
+.meal-slot {
+  min-height: 112px;
+  padding: 14px;
+  background: rgba(255, 253, 248, 0.72);
+}
+
+.meal-slot-header > span {
+  color: var(--olive);
+}
+
+.meal-add-button {
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  color: var(--olive-dark);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+
+.meal-add-button:hover {
+  color: var(--paper-light);
+  background: var(--olive-dark);
+}
+
+.selected-meal {
+  border-radius: 2px;
+  background: var(--paper);
+}
+
+.day-card-footer {
+  color: var(--ink);
+  background: var(--paper-deep);
+}
+
+.copy-day-button {
+  border-radius: 2px;
+  background: rgba(255, 253, 248, 0.54);
+}
+
+.weekly-summary {
+  padding: 20px 26px;
+  background: var(--ink);
+  color: var(--paper-light);
+  border-top: 0;
+}
+
+.weekly-summary-main {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.weekly-summary .weekly-summary-main > span,
+.weekly-summary .weekly-summary-main > strong,
+.weekly-summary .weekly-summary-main > small {
+  color: var(--paper-light);
+}
+
+.weekly-summary-main > small {
+  opacity: 0.65;
+  font-size: 0.72rem;
+}
+
+.weekly-macros {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weekly-macros > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px;
+  color: var(--paper-light);
+  border: 1px solid rgba(255, 253, 248, 0.22);
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.weekly-macros small {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  color: var(--ink);
+  background: var(--paper-light);
+  border-radius: 50%;
+  font-weight: 800;
+}
+
+.recipes-heading {
+  margin-bottom: 8px;
+}
+
+.primary-button,
+.secondary-button {
+  border-radius: 2px;
+}
+
+.primary-button {
+  box-shadow: 4px 4px 0 var(--paper-deep);
+}
+
+.recipe-grid {
+  gap: 16px;
+}
+
+.recipe-card {
+  border-radius: 3px;
+  box-shadow: none;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.recipe-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(70, 63, 49, 0.08);
+}
+
+.recipe-card::after {
+  width: 72px;
+  height: 72px;
+  background: rgba(184, 143, 73, 0.12);
+}
+
+.recipe-card h3 {
+  font-size: 1.55rem;
+}
+
+.recipe-modal,
+.ai-result-card,
+.ai-intro-card,
+.ingredient-builder,
+.nutrition-summary {
+  border-radius: 3px;
+}
+
+.recipe-modal {
+  box-shadow: 0 28px 80px rgba(47, 43, 37, 0.28);
+}
+
+.ai-result-heading strong {
+  font-family: "Fraunces", serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.ai-result-card {
+  background: #fffdf8;
+  border-color: var(--line);
+}
+
+.ai-intro-card {
+  background: var(--paper);
+}
+
+.ai-ingredients-preview > span,
+.ai-disclaimer {
+  color: var(--ink-soft);
+}
+
+.app-footer {
+  padding: 24px 54px;
+  background: var(--paper-deep);
+}
+
+.print-only {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .app-header,
+  .page-content {
+    padding-right: 28px;
+    padding-left: 28px;
+  }
+
+  .main-navigation {
+    padding-right: 28px;
+    padding-left: 28px;
+  }
+
+  .planner-intro {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .planner-actions {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .pdf-button {
+    justify-content: center;
+  }
+
+  .header-meta-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    width: calc(100% - 12px);
+    margin: 6px auto;
+  }
+
+  .app-header {
+    gap: 16px;
+    padding-top: 28px;
+  }
+
+  .app-header::after {
+    display: none;
+  }
+
+  .brand-mark {
+    width: 48px;
+    height: 62px;
+  }
+
+  .app-header h1 {
+    font-size: 3.1rem;
+  }
+
+  .header-description {
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.9rem;
+  }
+
+  .page-content {
+    padding-top: 34px;
+  }
+
+  .weekly-summary,
+  .weekly-summary-main {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .weekly-macros {
+    width: 100%;
+  }
+
+  .weekly-macros > span {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@page {
+  size: A4 landscape;
+  margin: 10mm;
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  body {
+    font-size: 9pt;
+  }
+
+  .app-shell {
+    width: 100%;
+    min-height: auto;
+    margin: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: #fff;
+  }
+
+  .decorative-line,
+  .main-navigation,
+  .app-footer,
+  .planner-intro,
+  .no-print,
+  .meal-add-button,
+  .remove-meal-button,
+  .servings-control,
+  .copy-day-button,
+  .modal-backdrop {
+    display: none !important;
+  }
+
+  .app-header {
+    padding: 0 0 8mm;
+    gap: 5mm;
+    border-bottom: 1px solid #bfb6a8;
+  }
+
+  .app-header::after {
+    display: none;
+  }
+
+  .brand-mark {
+    width: 13mm;
+    height: 17mm;
+    font-size: 18pt;
+    box-shadow: none;
+  }
+
+  .header-meta-row,
+  .header-description {
+    display: none;
+  }
+
+  .app-header h1 {
+    font-size: 28pt;
+  }
+
+  .page-content {
+    padding: 7mm 0 0;
+  }
+
+  .print-only {
+    display: flex !important;
+  }
+
+  .print-title {
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 5mm;
+    padding-bottom: 3mm;
+    border-bottom: 1px solid #d6cdbf;
+  }
+
+  .print-title span {
+    font-size: 7pt;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+  }
+
+  .print-title strong {
+    font-family: "Fraunces", serif;
+    font-size: 13pt;
+  }
+
+  .planner-stack {
+    gap: 7mm;
+  }
+
+  .weekly-section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    border: 1px solid #c9c0b2;
+    box-shadow: none;
+  }
+
+  .weekly-section + .weekly-section {
+    page-break-before: always;
+  }
+
+  .weekly-section-header {
+    padding: 4mm;
+  }
+
+  .person-avatar {
+    width: 9mm;
+    height: 9mm;
+    font-size: 10pt;
+  }
+
+  .weekly-kicker,
+  .person-subtitle {
+    font-size: 6pt;
+  }
+
+  .weekly-section h2 {
+    font-size: 16pt;
+  }
+
+  .days-grid {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2mm;
+    padding: 3mm;
+    overflow: visible;
+  }
+
+  .day-card {
+    min-width: 0;
+    border: 1px solid #d2c9bb;
+    box-shadow: none;
+  }
+
+  .day-card:hover {
+    transform: none;
+  }
+
+  .day-card-header {
+    padding: 2.5mm;
+  }
+
+  .day-card h3 {
+    font-size: 10pt;
+  }
+
+  .day-card-label,
+  .day-card-total {
+    font-size: 5.5pt;
+  }
+
+  .meal-slot {
+    min-height: 18mm;
+    padding: 2mm;
+  }
+
+  .meal-slot-header > span,
+  .meal-slot-empty,
+  .selected-meal span,
+  .selected-meal-calories span,
+  .selected-meal-calories strong {
+    font-size: 5.5pt;
+  }
+
+  .selected-meal {
+    margin-top: 1.5mm;
+    padding: 1.5mm;
+    border: 0;
+    background: transparent;
+  }
+
+  .selected-meal strong {
+    font-size: 7pt;
+    white-space: normal;
+  }
+
+  .day-card-footer {
+    padding: 2mm;
+    font-size: 5.5pt;
+  }
+
+  .weekly-summary {
+    padding: 3mm 4mm;
+  }
+
+  .weekly-summary-main,
+  .weekly-macros {
+    gap: 2mm;
+  }
+
+  .weekly-summary-main > span,
+  .weekly-summary-main > small,
+  .weekly-macros > span {
+    font-size: 6pt;
+  }
+
+  .weekly-summary-main > strong {
+    font-size: 10pt;
+  }
+
+  .weekly-macros > span {
+    padding: 1mm 1.5mm;
+  }
+
+  .weekly-macros small {
+    width: 4mm;
+    height: 4mm;
+    font-size: 5pt;
+  }
+}
