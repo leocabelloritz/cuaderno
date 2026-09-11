@@ -41,6 +41,9 @@ function Planner({ recipes }) {
             name: recipe.name,
             portion: recipe.portion,
             baseCalories: recipe.calories,
+            baseProtein: recipe.protein ?? 0,
+            baseCarbs: recipe.carbs ?? 0,
+            baseFat: recipe.fat ?? 0,
             servings: person === "Leo" ? 1.5 : 1,
           },
         },
@@ -131,23 +134,46 @@ function Planner({ recipes }) {
     });
   }
 
+  function handleExportPdf() {
+    window.print();
+  }
+
   return (
-    <main className="page-content">
-      <div className="page-introduction">
-        <p className="section-label">Planificación familiar</p>
+    <main className="page-content planner-page">
+      <section className="planner-intro">
+        <div className="page-introduction">
+          <p className="section-label">Planificación familiar</p>
 
-        <h2>El menú de esta semana</h2>
+          <h2>El menú de esta semana</h2>
 
-        <p>
-          Agrega preparaciones a cada comida. Las porciones y calorías se
-          calcularán de manera independiente para cada uno.
-        </p>
+          <p>
+            Una vista simple de lo que vamos a comer, con porciones ajustadas
+            para cada uno y el cálculo nutricional de las preparaciones.
+          </p>
 
-        <p className="available-recipes-count">
-          {recipes.length === 1
-            ? "1 preparación disponible"
-            : `${recipes.length} preparaciones disponibles`}
-        </p>
+          <p className="available-recipes-count">
+            {recipes.length === 1
+              ? "1 preparación disponible"
+              : `${recipes.length} preparaciones disponibles`}
+          </p>
+        </div>
+
+        <div className="planner-actions no-print">
+          <span className="planner-actions-note">Edición semanal</span>
+          <button
+            type="button"
+            className="pdf-button"
+            onClick={handleExportPdf}
+          >
+            <span aria-hidden="true">↓</span>
+            Descargar menú PDF
+          </button>
+        </div>
+      </section>
+
+      <div className="print-only print-title">
+        <span>CUADERNO / MENÚ SEMANAL</span>
+        <strong>Victoria & Leo</strong>
       </div>
 
       <div className="planner-stack">
