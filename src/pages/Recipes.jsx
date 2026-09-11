@@ -1,16 +1,17 @@
 import { useState } from "react";
 import RecipeForm from "../components/RecipeForm";
+import AiRecipeForm from "../components/AiRecipeForm";
 
 function Recipes({
   recipes,
   onAddRecipe,
   onDeleteRecipe,
 }) {
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [activeForm, setActiveForm] = useState(null);
 
   function handleAddRecipe(recipeData) {
     onAddRecipe(recipeData);
-    setIsFormOpen(false);
+    setActiveForm(null);
   }
 
   return (
@@ -24,14 +25,24 @@ function Recipes({
           </p>
         </div>
 
-        <button
-          type="button"
-          className="primary-button"
-          onClick={() => setIsFormOpen(true)}
-        >
-          <span aria-hidden="true">＋</span>
-          Nueva preparación
-        </button>
+        <div className="recipes-actions">
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => setActiveForm("manual")}
+          >
+            Cálculo manual
+          </button>
+
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => setActiveForm("ai")}
+          >
+            <span aria-hidden="true">✦</span>
+            Nueva con IA
+          </button>
+        </div>
       </div>
 
       {recipes.length === 0 ? (
@@ -60,6 +71,10 @@ function Recipes({
                   "Preparación sin descripción."}
               </p>
 
+              {recipe.estimated && (
+                <p className="recipe-ai-badge">Estimación IA</p>
+              )}
+
               <div className="recipe-card-footer">
                 <span>{recipe.portion}</span>
 
@@ -77,10 +92,17 @@ function Recipes({
         </div>
       )}
 
-      {isFormOpen && (
+      {activeForm === "manual" && (
         <RecipeForm
           onSubmit={handleAddRecipe}
-          onCancel={() => setIsFormOpen(false)}
+          onCancel={() => setActiveForm(null)}
+        />
+      )}
+
+      {activeForm === "ai" && (
+        <AiRecipeForm
+          onSubmit={handleAddRecipe}
+          onCancel={() => setActiveForm(null)}
         />
       )}
     </main>
