@@ -21,6 +21,17 @@ function getMealCalories(meal) {
   return Math.round(baseCalories * servings);
 }
 
+function getMealMacro(meal, key) {
+  if (!meal) {
+    return 0;
+  }
+
+  const servings = meal.servings ?? 1;
+  const baseValue = Number(meal[key] ?? 0);
+
+  return baseValue * servings;
+}
+
 function WeeklyTable({
   person,
   targetPerson,
@@ -34,16 +45,21 @@ function WeeklyTable({
 }) {
   const personPlanner = planner[person] || {};
 
-  const weeklyCalories = DAYS.reduce((weekTotal, day) => {
-    const dayMeals = personPlanner[day] || {};
+  const weeklyNutrition = DAYS.reduce(
+    (weekTotal, day) => {
+      const dayMeals = personPlanner[day] || {};
 
-    const dayTotal = Object.values(dayMeals).reduce(
-      (total, meal) => total + getMealCalories(meal),
-      0,
-    );
+      Object.values(dayMeals).forEach((meal) => {
+        weekTotal.calories += getMealCalories(meal);
+        weekTotal.protein += getMealMacro(meal, "baseProtein");
+        weekTotal.carbs += getMealMacro(meal, "baseCarbs");
+        weekTotal.fat += getMealMacro(meal, "baseFat");
+      });
 
-    return weekTotal + dayTotal;
-  }, 0);
+      return weekTotal;
+    },
+    { calories: 0, protein: 0, carbs: 0, fat: 0 },
+  );
 
   return (
     <section className="weekly-section weekly-card-section">
@@ -55,7 +71,8 @@ function WeeklyTable({
           {person.charAt(0)}
         </div>
 
-        <div>
+        <div className="person-heading-copy">
+          <p className="weekly-kicker">Menú semanal</p>
           <h2>{person}</h2>
           <p className="person-subtitle">{subtitle}</p>
         </div>
@@ -78,15 +95,28 @@ function WeeklyTable({
       </div>
 
       <footer className="weekly-summary">
-        <div>
+        <div className="weekly-summary-main">
           <span>Total semanal</span>
-          <strong>{weeklyCalories} kcal</strong>
+          <strong>{weeklyNutrition.calories} kcal</strong>
+          <small>
+            Promedio diario: {Math.round(weeklyNutrition.calories / DAYS.length)} kcal
+          </small>
         </div>
 
-        <p>
-          Promedio diario:{" "}
-          {Math.round(weeklyCalories / DAYS.length)} kcal
-        </p>
+        <div className="weekly-macros" aria-label="Macros semanales">
+          <span>
+            <small>P</small>
+            {Math.round(weeklyNutrition.protein)} g
+          </span>
+          <span>
+            <small>C</small>
+            {Math.round(weeklyNutrition.carbs)} g
+          </span>
+          <span>
+            <small>G</small>
+            {Math.round(weeklyNutrition.fat)} g
+          </span>
+        </div>
       </footer>
     </section>
   );
