@@ -10,6 +10,14 @@
   overflow: hidden;
 }
 
+@media (max-width: 900px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
 @media print {
   .app-header {
     display: none !important;
@@ -25,12 +33,14 @@
   }
 
   .planner-stack {
+    display: block;
     gap: 0;
   }
 
   .weekly-section {
-    break-inside: auto;
-    page-break-inside: auto;
+    display: block;
+    break-inside: avoid-page;
+    page-break-inside: avoid;
     margin: 0;
   }
 
