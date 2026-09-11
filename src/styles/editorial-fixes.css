@@ -1,0 +1,53 @@
+.app-header {
+  align-items: center;
+}
+
+.brand-mark {
+  align-self: center;
+}
+
+.weekly-section {
+  overflow: hidden;
+}
+
+@media print {
+  .app-header {
+    display: none !important;
+  }
+
+  .page-content {
+    padding: 0;
+  }
+
+  .print-title {
+    margin: 0 0 4mm;
+    padding-bottom: 2.5mm;
+  }
+
+  .planner-stack {
+    gap: 0;
+  }
+
+  .weekly-section {
+    break-inside: auto;
+    page-break-inside: auto;
+    margin: 0;
+  }
+
+  .weekly-section + .weekly-section {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .weekly-section-header {
+    padding: 3mm 4mm;
+  }
+
+  .days-grid {
+    padding: 2.5mm;
+  }
+
+  .meal-slot {
+    min-height: 17mm;
+  }
+}
