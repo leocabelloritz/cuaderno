@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "./components/Header";
 import Navigation from "./components/Navigation";
 import AuthScreen from "./components/AuthScreen";
+import LoadingScreen from "./components/LoadingScreen";
 import Planner from "./pages/Planner";
 import Recipes from "./pages/Recipes";
 import useRecipes from "./hooks/useRecipes";
@@ -136,9 +137,9 @@ function App() {
     }
   }
 
-  if (booting) return <main className="auth-shell"><section className="auth-card"><p>Cargando Cuaderno…</p></section></main>;
+  if (booting) return <LoadingScreen message="Cargando Cuaderno" />;
   if (!session) return <AuthScreen onAuthenticated={handleAuthenticated} />;
-  if (householdLoading) return <main className="auth-shell"><section className="auth-card"><p>Sincronizando hogar…</p></section></main>;
+  if (householdLoading) return <LoadingScreen message="Sincronizando hogar" />;
   if (!membership) return <HouseholdSetup session={session} onReady={() => loadMembership(session)} />;
 
   return (
