@@ -24,6 +24,26 @@
   margin: 0 auto !important;
 }
 
+/* Login: mismo símbolo editorial que la cabecera de Cuaderno */
+.auth-brand-mark {
+  display: grid !important;
+  place-items: center !important;
+  width: 76px !important;
+  height: 100px !important;
+  margin: 0 0 26px !important;
+  color: #fffdf6 !important;
+  background: linear-gradient(140deg, #516048, #273626) !important;
+  border-radius: 8px 22px 22px 8px !important;
+  box-shadow:
+    inset 8px 0 0 rgba(255, 255, 255, 0.08),
+    0 10px 28px rgba(39, 54, 38, 0.18) !important;
+  font-family: "Cormorant Garamond", "Fraunces", serif !important;
+  font-size: 44px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  transform: none !important;
+}
+
 @media (max-width: 700px) {
   /* Código de dispositivo: fila completa, equilibrada en dos mitades */
   .account-code-block.compact-code-block {
@@ -83,6 +103,14 @@
   .pdf-button {
     width: min(100%, 520px) !important;
     margin: 0 auto !important;
+  }
+
+  .auth-brand-mark {
+    width: 64px !important;
+    height: 84px !important;
+    border-radius: 7px 19px 19px 7px !important;
+    font-size: 36px !important;
+    margin-bottom: 22px !important;
   }
 }
 
