@@ -69,9 +69,8 @@ function CopyIcon() {
 function ImportIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3.5 7.5h6l2 2h9v8.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V7.5Z" />
-      <path d="M12 5v8" />
-      <path d="m8.8 9.8 3.2 3.2 3.2-3.2" />
+      <path d="M12 4v8m0 0 3-3m-3 3-3-3" />
+      <path d="M4 15.5h4l1.2 2h5.6l1.2-2H20" />
     </svg>
   );
 }
