@@ -8,10 +8,12 @@
 
 .account-actions {
   grid-column: auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 0;
+  min-width: 250px;
   margin: 0;
   padding-left: 18px;
   border-top: 0;
@@ -19,15 +21,26 @@
 }
 
 .account-action-button {
-  min-height: 42px;
-  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
   border: 0 !important;
-  border-radius: 9px;
+  border-radius: 0;
   background: transparent !important;
   box-shadow: none !important;
   appearance: none;
   -webkit-appearance: none;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.15;
+}
+
+.account-action-button:first-child {
+  border-right: 1px solid var(--selected-line) !important;
 }
 
 .account-action-button::before,
@@ -39,18 +52,15 @@
 .account-action-button:hover,
 .account-action-button:active,
 .account-action-button:focus {
-  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
   box-shadow: none !important;
   transform: none !important;
 }
 
 .account-action-button:focus-visible {
   outline: 2px solid rgba(75, 86, 63, .28);
-  outline-offset: 2px;
-}
-
-.account-action-button + .account-action-button {
-  border-left: 0 !important;
+  outline-offset: -2px;
 }
 
 .account-action-button svg {
@@ -77,97 +87,151 @@
   font-size: 1rem;
 }
 
-.compact-today-grid {
-  margin-top: 18px;
-  gap: 10px;
+/* Timeline diario compartido */
+.shared-day-timeline {
+  margin-top: 20px;
+  overflow: hidden;
+  background: rgba(255,255,255,.34);
+  border: 1px solid #d8cfbf;
+  border-radius: 14px;
 }
 
-.compact-today-card {
-  padding: 14px;
-}
-
-.compact-today-card .today-menu-card-header {
-  margin-bottom: 10px;
-}
-
-.compact-today-card .today-menu-card-header strong {
-  font-size: 1.5rem;
-}
-
-.compact-today-card .today-menu-card-header span {
-  font-size: .62rem;
-}
-
-.mini-meal-scroll {
+.shared-meal-row {
   position: relative;
-  max-height: 92px;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(75,86,63,.4) transparent;
-  border: 1px solid #ded5c6;
-  border-radius: 10px;
-  background: rgba(249,246,239,.72);
-}
-
-.mini-meal-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-
-.mini-meal-scroll::-webkit-scrollbar-thumb {
-  background: rgba(75,86,63,.38);
-  border-radius: 999px;
-}
-
-.mini-meal-row {
-  position: relative;
-  min-height: 78px;
   display: grid;
-  align-content: center;
-  gap: 4px;
-  padding: 12px 42px 12px 14px;
-  border: 0;
+  grid-template-columns: 28px 150px minmax(0, 1fr) auto 20px;
+  align-items: center;
+  min-height: 82px;
+  padding: 0 18px 0 14px;
   border-bottom: 1px solid #e2d9ca;
-  border-radius: 0;
-  scroll-snap-align: center;
+  transition: background-color 150ms ease;
 }
 
-.mini-meal-row:last-child {
+.shared-meal-row:last-child {
   border-bottom: 0;
 }
 
-.mini-meal-row span {
-  font-size: .64rem;
+.shared-meal-row.is-current {
+  background: rgba(75, 86, 63, .08);
 }
 
-.mini-meal-row strong {
-  font-size: .88rem;
-  line-height: 1.25;
+.timeline-rail {
+  position: relative;
+  align-self: stretch;
 }
 
-.mini-meal-row > small {
+.timeline-dot {
   position: absolute;
-  right: 10px;
   top: 50%;
-  transform: translateY(-50%);
-  padding: 4px 7px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #bdb4a5;
+  border-radius: 50%;
+  background: #f8f4ec;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 50%;
+  bottom: -50%;
+  left: 50%;
+  width: 1px;
+  background: #cfc5b5;
+  transform: translateX(-50%);
+}
+
+.shared-meal-row.is-current .timeline-dot {
+  width: 15px;
+  height: 15px;
+  border: 4px solid #f8f4ec;
+  background: var(--selected-olive);
+  box-shadow: 0 0 0 2px var(--selected-olive);
+}
+
+.shared-meal-label {
+  display: grid;
+  gap: 2px;
+  padding-left: 8px;
+}
+
+.shared-meal-label strong {
+  color: #282b25;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.24rem;
+  font-weight: 600;
+}
+
+.shared-meal-label small {
+  color: #81796e;
+  font-size: .68rem;
+}
+
+.shared-meal-people {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.shared-person-meal {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.person-mini-badge {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  color: #fffdf8;
+  border-radius: 50%;
+  font-family: "Cormorant Garamond", serif;
+  font-size: .74rem;
+  font-weight: 700;
+}
+
+.person-mini-badge.victoria {
+  background: var(--selected-rust);
+}
+
+.person-mini-badge.leo {
+  background: var(--selected-olive);
+}
+
+.shared-person-meal > span:last-child {
+  overflow: hidden;
+  color: #6e685f;
+  font-size: .78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.current-meal-pill {
+  margin-left: 12px;
+  padding: 7px 11px;
   color: #fffdf8;
   background: var(--selected-olive);
   border-radius: 999px;
-  font-size: .54rem;
+  font-size: .58rem;
   font-weight: 700;
-  letter-spacing: .08em;
+  letter-spacing: .12em;
   text-transform: uppercase;
 }
 
-.mini-meal-row.is-next {
-  background: rgba(75, 86, 63, .085);
-  box-shadow: inset 3px 0 0 var(--selected-olive);
+.shared-meal-chevron {
+  color: #8a8377;
+  font-size: 1.35rem;
+  line-height: 1;
+  text-align: right;
 }
 
 .compact-summary {
-  margin-top: 12px;
+  margin-top: 14px;
   padding-top: 14px;
   padding-bottom: 14px;
 }
@@ -204,7 +268,7 @@
 
 @media (max-width: 900px) {
   .account-strip {
-    grid-template-columns: minmax(0, 1fr) minmax(190px, .85fr);
+    grid-template-columns: minmax(0, 1fr) minmax(220px, .9fr);
     grid-template-areas:
       "identity actions"
       "code code";
@@ -218,8 +282,9 @@
 
   .account-actions {
     grid-area: actions;
+    min-width: 0;
     border-left: 1px solid var(--selected-line);
-    padding-left: 10px;
+    padding-left: 0;
   }
 
   .account-code-block {
@@ -231,7 +296,7 @@
 
 @media (max-width: 700px) {
   .account-strip {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(150px, .72fr);
     grid-template-areas:
       "identity actions"
       "code code";
@@ -253,18 +318,27 @@
   }
 
   .account-actions {
-    gap: 4px;
-    padding-left: 8px;
+    grid-template-columns: 1fr 1fr;
+    align-self: stretch;
   }
 
   .account-action-button {
-    min-width: 40px;
-    min-height: 40px;
-    padding: 0 9px;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    min-height: 58px;
+    padding: 6px 5px;
+    font-size: .62rem;
   }
 
   .account-action-button span {
-    display: none;
+    display: block;
+    max-width: 64px;
+    text-align: center;
+  }
+
+  .account-action-button:first-child span {
+    max-width: 74px;
   }
 
   .account-code-block {
@@ -291,35 +365,51 @@
     font-size: clamp(2.55rem, 12vw, 3.7rem);
   }
 
-  .compact-today-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+  .shared-day-timeline {
+    margin-top: 18px;
   }
 
-  .compact-today-card {
-    padding: 10px;
+  .shared-meal-row {
+    grid-template-columns: 24px 104px minmax(0, 1fr) auto 14px;
+    min-height: 78px;
+    padding: 0 10px 0 8px;
   }
 
-  .compact-today-card .today-menu-card-header {
-    display: grid;
-    gap: 2px;
+  .shared-meal-label {
+    padding-left: 5px;
   }
 
-  .compact-today-card .today-menu-card-header strong {
-    font-size: 1.35rem;
+  .shared-meal-label strong {
+    font-size: 1.04rem;
   }
 
-  .mini-meal-scroll {
-    max-height: 86px;
+  .shared-meal-label small {
+    font-size: .58rem;
   }
 
-  .mini-meal-row {
-    min-height: 72px;
-    padding: 10px 36px 10px 10px;
+  .shared-person-meal {
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: 6px;
   }
 
-  .mini-meal-row strong {
-    font-size: .8rem;
+  .person-mini-badge {
+    width: 20px;
+    height: 20px;
+    font-size: .66rem;
+  }
+
+  .shared-person-meal > span:last-child {
+    font-size: .67rem;
+  }
+
+  .current-meal-pill {
+    margin-left: 7px;
+    padding: 6px 8px;
+    font-size: .5rem;
+  }
+
+  .shared-meal-chevron {
+    font-size: 1.1rem;
   }
 
   .planner-cover {
@@ -328,11 +418,25 @@
 }
 
 @media (max-width: 430px) {
-  .compact-today-grid {
-    grid-template-columns: 1fr;
-  }
-
   .account-meta small {
     font-size: .7rem;
+  }
+
+  .shared-meal-row {
+    grid-template-columns: 22px 92px minmax(0, 1fr) 15px;
+  }
+
+  .current-meal-pill {
+    position: absolute;
+    right: 24px;
+    top: 8px;
+  }
+
+  .shared-meal-row.is-current .shared-meal-people {
+    padding-top: 12px;
+  }
+
+  .shared-meal-chevron {
+    grid-column: 4;
   }
 }
