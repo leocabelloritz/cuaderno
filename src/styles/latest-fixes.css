@@ -10,6 +10,20 @@
   display: none !important;
 }
 
+/* Descarga PDF: fondo completo y botón centrado */
+.planner-actions {
+  box-sizing: border-box;
+  justify-content: center !important;
+  background: rgba(239, 233, 222, 0.78) !important;
+}
+
+.pdf-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center !important;
+  margin: 0 auto !important;
+}
+
 @media (max-width: 700px) {
   /* Código de dispositivo: fila completa, equilibrada en dos mitades */
   .account-code-block.compact-code-block {
@@ -56,6 +70,19 @@
 
   .shared-meal-row.is-current {
     padding-right: 10px !important;
+  }
+
+  .planner-actions {
+    width: calc(100% + 36px) !important;
+    margin-left: -18px !important;
+    margin-right: -18px !important;
+    padding: 14px 18px 18px !important;
+    background: rgba(239, 233, 222, 0.82) !important;
+  }
+
+  .pdf-button {
+    width: min(100%, 520px) !important;
+    margin: 0 auto !important;
   }
 }
 
