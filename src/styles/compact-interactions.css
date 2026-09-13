@@ -21,17 +21,41 @@
 .account-action-button {
   min-height: 42px;
   padding: 0 12px;
+  border: 0 !important;
   border-radius: 9px;
+  background: transparent !important;
+  box-shadow: none !important;
+  appearance: none;
+  -webkit-appearance: none;
   white-space: nowrap;
 }
 
+.account-action-button::before,
+.account-action-button::after {
+  display: none !important;
+  content: none !important;
+}
+
+.account-action-button:hover,
+.account-action-button:active,
+.account-action-button:focus {
+  border: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.account-action-button:focus-visible {
+  outline: 2px solid rgba(75, 86, 63, .28);
+  outline-offset: 2px;
+}
+
 .account-action-button + .account-action-button {
-  border-left: 0;
+  border-left: 0 !important;
 }
 
 .account-action-button svg {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
   flex: 0 0 auto;
   fill: none;
   stroke: currentColor;
