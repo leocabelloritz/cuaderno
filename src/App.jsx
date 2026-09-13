@@ -85,6 +85,7 @@ function App() {
   const [booting, setBooting] = useState(true);
   const [householdLoading, setHouseholdLoading] = useState(false);
   const [copiedInviteCode, setCopiedInviteCode] = useState(false);
+  const [showInviteCode, setShowInviteCode] = useState(false);
 
   const household = membership?.households || null;
   const householdId = membership?.household_id || household?.id || null;
@@ -160,15 +161,22 @@ function App() {
           </div>
         </div>
 
-        <div className="account-code-block">
-          <span className="account-code-label">Código de dispositivo</span>
-          {household?.invite_code ? (
-            <div className="account-code-box">
-              <strong>{household.invite_code}</strong>
-              <button type="button" className="icon-copy-button" onClick={handleCopyInviteCode} aria-label="Copiar código" title="Copiar código"><CopyIcon /></button>
-              {copiedInviteCode && <small className="copy-feedback">Copiado</small>}
-            </div>
-          ) : <span className="invite-code"><strong>Sin código</strong></span>}
+        <div className="account-code-block compact-code-block">
+          <div className="account-code-header">
+            <span className="account-code-label">Código de dispositivo</span>
+            <button type="button" className="toggle-code-button" onClick={() => setShowInviteCode((current) => !current)}>
+              {showInviteCode ? "Ocultar" : "Mostrar"}
+            </button>
+          </div>
+          {showInviteCode && (
+            household?.invite_code ? (
+              <div className="account-code-box compact-code-box">
+                <strong>{household.invite_code}</strong>
+                <button type="button" className="icon-copy-button" onClick={handleCopyInviteCode} aria-label="Copiar código" title="Copiar código"><CopyIcon /></button>
+                {copiedInviteCode && <small className="copy-feedback">Copiado</small>}
+              </div>
+            ) : <span className="invite-code"><strong>Sin código</strong></span>
+          )}
         </div>
 
         <div className="account-actions">
