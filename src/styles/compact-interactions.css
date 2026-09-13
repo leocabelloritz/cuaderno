@@ -1,0 +1,314 @@
+/* Ajustes de interacción y compacidad */
+
+.account-strip {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, .9fr) auto;
+  align-items: center;
+  padding-bottom: 18px;
+}
+
+.account-actions {
+  grid-column: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  border-top: 0;
+  border-left: 1px solid var(--selected-line);
+}
+
+.account-action-button {
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: 9px;
+  white-space: nowrap;
+}
+
+.account-action-button + .account-action-button {
+  border-left: 0;
+}
+
+.account-action-button svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.compact-daily-heading {
+  align-items: end;
+}
+
+.compact-daily-heading .page-introduction h2 {
+  font-size: clamp(2.7rem, 6vw, 4.6rem);
+}
+
+.compact-daily-heading .page-introduction > p:not(.section-label) {
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.compact-today-grid {
+  margin-top: 18px;
+  gap: 10px;
+}
+
+.compact-today-card {
+  padding: 14px;
+}
+
+.compact-today-card .today-menu-card-header {
+  margin-bottom: 10px;
+}
+
+.compact-today-card .today-menu-card-header strong {
+  font-size: 1.5rem;
+}
+
+.compact-today-card .today-menu-card-header span {
+  font-size: .62rem;
+}
+
+.mini-meal-scroll {
+  position: relative;
+  max-height: 92px;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(75,86,63,.4) transparent;
+  border: 1px solid #ded5c6;
+  border-radius: 10px;
+  background: rgba(249,246,239,.72);
+}
+
+.mini-meal-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mini-meal-scroll::-webkit-scrollbar-thumb {
+  background: rgba(75,86,63,.38);
+  border-radius: 999px;
+}
+
+.mini-meal-row {
+  position: relative;
+  min-height: 78px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 12px 42px 12px 14px;
+  border: 0;
+  border-bottom: 1px solid #e2d9ca;
+  border-radius: 0;
+  scroll-snap-align: center;
+}
+
+.mini-meal-row:last-child {
+  border-bottom: 0;
+}
+
+.mini-meal-row span {
+  font-size: .64rem;
+}
+
+.mini-meal-row strong {
+  font-size: .88rem;
+  line-height: 1.25;
+}
+
+.mini-meal-row > small {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 7px;
+  color: #fffdf8;
+  background: var(--selected-olive);
+  border-radius: 999px;
+  font-size: .54rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.mini-meal-row.is-next {
+  background: rgba(75, 86, 63, .085);
+  box-shadow: inset 3px 0 0 var(--selected-olive);
+}
+
+.compact-summary {
+  margin-top: 12px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+/* El día no se desplaza ni pierde el contorno al tocar/hover */
+.day-card,
+.day-card:hover,
+.day-card:active,
+.day-card:focus-within {
+  transform: none !important;
+}
+
+.day-card {
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.day-card:hover,
+.day-card:focus-within {
+  border-color: rgba(75, 86, 63, .5);
+  box-shadow:
+    0 0 0 2px rgba(75, 86, 63, .12),
+    0 8px 20px rgba(64, 52, 38, .06) !important;
+}
+
+.day-card:active {
+  border-color: var(--selected-olive);
+  box-shadow:
+    0 0 0 2px rgba(75, 86, 63, .16),
+    inset 0 0 0 1px rgba(75, 86, 63, .16) !important;
+}
+
+@media (max-width: 900px) {
+  .account-strip {
+    grid-template-columns: minmax(0, 1fr) minmax(190px, .85fr);
+    grid-template-areas:
+      "identity actions"
+      "code code";
+    padding-bottom: 0;
+  }
+
+  .account-identity {
+    grid-area: identity;
+    border-right: 0;
+  }
+
+  .account-actions {
+    grid-area: actions;
+    border-left: 1px solid var(--selected-line);
+    padding-left: 10px;
+  }
+
+  .account-code-block {
+    grid-area: code;
+    padding: 14px 0 16px;
+    border-top: 1px solid var(--selected-line);
+  }
+}
+
+@media (max-width: 700px) {
+  .account-strip {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "identity actions"
+      "code code";
+    padding: 14px 14px 0;
+  }
+
+  .account-identity {
+    padding: 0 8px 12px 0;
+  }
+
+  .account-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 1.65rem;
+  }
+
+  .account-copy > strong {
+    font-size: 1.35rem;
+  }
+
+  .account-actions {
+    gap: 4px;
+    padding-left: 8px;
+  }
+
+  .account-action-button {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0 9px;
+  }
+
+  .account-action-button span {
+    display: none;
+  }
+
+  .account-code-block {
+    padding-top: 12px;
+  }
+
+  .compact-daily-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .compact-daily-heading .planner-day-badge {
+    position: static;
+    min-width: auto;
+    padding: 10px 12px;
+    transform: none;
+  }
+
+  .compact-daily-heading .planner-day-badge span {
+    font-size: 1rem;
+  }
+
+  .compact-daily-heading .page-introduction h2 {
+    font-size: clamp(2.55rem, 12vw, 3.7rem);
+  }
+
+  .compact-today-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .compact-today-card {
+    padding: 10px;
+  }
+
+  .compact-today-card .today-menu-card-header {
+    display: grid;
+    gap: 2px;
+  }
+
+  .compact-today-card .today-menu-card-header strong {
+    font-size: 1.35rem;
+  }
+
+  .mini-meal-scroll {
+    max-height: 86px;
+  }
+
+  .mini-meal-row {
+    min-height: 72px;
+    padding: 10px 36px 10px 10px;
+  }
+
+  .mini-meal-row strong {
+    font-size: .8rem;
+  }
+
+  .planner-cover {
+    padding-top: 22px;
+  }
+}
+
+@media (max-width: 430px) {
+  .compact-today-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .account-meta small {
+    font-size: .7rem;
+  }
+}
