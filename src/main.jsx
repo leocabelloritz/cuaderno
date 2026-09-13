@@ -7,6 +7,7 @@ import './styles/editorial-fixes.css'
 import './styles/sync.css'
 import './styles/selected-look.css'
 import './styles/compact-interactions.css'
+import './styles/weekly-cards.css'
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
