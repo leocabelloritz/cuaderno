@@ -44,19 +44,33 @@
   transform: none !important;
 }
 
-/* Botón cerrar modal: solo X, sin círculo */
+/* Cierre modal: X anclada a la esquina superior derecha */
+.recipe-modal,
+.selector-modal {
+  position: relative !important;
+}
+
+.modal-header {
+  padding-right: 42px;
+}
+
 .modal-close-button {
+  position: absolute !important;
+  top: 18px !important;
+  right: 18px !important;
+  z-index: 3;
   display: grid !important;
   place-items: center !important;
-  width: 40px !important;
-  height: 40px !important;
-  min-width: 40px !important;
-  min-height: 40px !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  margin: 0 !important;
   padding: 0 !important;
   color: #746d61 !important;
   background: transparent !important;
   border: 0 !important;
-  border-radius: 0 !important;
+  border-radius: 8px !important;
   box-shadow: none !important;
   line-height: 1 !important;
   text-align: center !important;
@@ -72,9 +86,10 @@
   line-height: 1;
 }
 
-.modal-close-button:hover {
+.modal-close-button:hover,
+.modal-close-button:active {
   color: #302d27 !important;
-  background: transparent !important;
+  background: rgba(75, 86, 63, 0.06) !important;
 }
 
 @media (max-width: 700px) {
@@ -146,11 +161,17 @@
     margin-bottom: 22px !important;
   }
 
+  .modal-header {
+    padding-right: 38px;
+  }
+
   .modal-close-button {
-    width: 38px !important;
-    height: 38px !important;
-    min-width: 38px !important;
-    min-height: 38px !important;
+    top: 14px !important;
+    right: 14px !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
   }
 }
 
