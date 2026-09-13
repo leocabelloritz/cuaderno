@@ -1,0 +1,149 @@
+/* Tarjetas del planificador semanal: interacción estable y editorial */
+
+.days-grid {
+  gap: 10px !important;
+  padding: 10px 10px 12px !important;
+  scroll-padding-inline: 10px;
+}
+
+.day-card,
+.day-card:hover,
+.day-card:active,
+.day-card:focus,
+.day-card:focus-within {
+  transform: none !important;
+}
+
+.day-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #d8cfbf !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow: none !important;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.day-card + .day-card {
+  margin-left: 0 !important;
+}
+
+.day-card-header {
+  position: relative;
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.day-card-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 70px;
+  height: 4px;
+  background: var(--selected-rust);
+  border-radius: 0 0 999px 0;
+  transition: width 180ms ease, height 180ms ease, background-color 180ms ease;
+}
+
+.day-card:hover,
+.day-card:focus-within {
+  border-color: #d8cfbf !important;
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow: inset 0 0 0 1px rgba(75, 86, 63, 0.06) !important;
+}
+
+.day-card:hover .day-card-header,
+.day-card:focus-within .day-card-header {
+  background: rgba(75, 86, 63, 0.045);
+  box-shadow: inset 0 -1px 0 rgba(75, 86, 63, 0.12);
+}
+
+.day-card:hover .day-card-header::before,
+.day-card:focus-within .day-card-header::before {
+  width: 118px;
+  height: 5px;
+  background: var(--selected-olive);
+}
+
+.day-card:active {
+  border-color: #d8cfbf !important;
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow: inset 0 0 0 2px rgba(75, 86, 63, 0.12) !important;
+}
+
+.day-card:active .day-card-header {
+  background: rgba(75, 86, 63, 0.065);
+}
+
+.day-card:active .day-card-header::before {
+  width: 132px;
+  height: 5px;
+  background: var(--selected-olive);
+}
+
+.day-card:focus-visible {
+  outline: none;
+}
+
+.day-card:focus-within::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 2px rgba(75, 86, 63, 0.14);
+}
+
+@media (hover: none) {
+  .day-card:hover {
+    background: rgba(255, 255, 255, 0.42);
+    box-shadow: none !important;
+  }
+
+  .day-card:hover .day-card-header {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .day-card:hover .day-card-header::before {
+    width: 70px;
+    height: 4px;
+    background: var(--selected-rust);
+  }
+
+  .day-card:focus-within .day-card-header {
+    background: rgba(75, 86, 63, 0.05);
+    box-shadow: inset 0 -1px 0 rgba(75, 86, 63, 0.12);
+  }
+
+  .day-card:focus-within .day-card-header::before {
+    width: 118px;
+    height: 5px;
+    background: var(--selected-olive);
+  }
+}
+
+@media (max-width: 700px) {
+  .days-grid {
+    gap: 12px !important;
+    padding-inline: 12px !important;
+  }
+
+  .day-card {
+    border-radius: 13px !important;
+  }
+
+  .day-card-header::before {
+    width: 54px;
+  }
+
+  .day-card:focus-within .day-card-header::before,
+  .day-card:active .day-card-header::before {
+    width: 96px;
+  }
+}
