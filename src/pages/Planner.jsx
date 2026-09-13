@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import RecipeSelectorModal from "../components/RecipeSelectorModal";
 import WeeklyTable from "../components/WeeklyTable";
 import { colors } from "../styles/theme";
@@ -10,7 +10,12 @@ import {
 
 const STORAGE_KEY = "cuaderno-planner";
 const PEOPLE = ["Victoria", "Leo"];
-const MEAL_SLOTS = ["Desayuno", "Almuerzo", "Merienda", "Cena"];
+const MEAL_SLOTS = [
+  { meal: "Desayuno", time: "07:00 – 11:00" },
+  { meal: "Almuerzo", time: "11:00 – 16:00" },
+  { meal: "Merienda", time: "16:00 – 20:00" },
+  { meal: "Cena", time: "20:00 – 24:00" },
+];
 
 function migrateMealNames(planner) {
   const migratedPlanner = structuredClone(planner || {});
@@ -74,7 +79,6 @@ function Planner({ recipes, session, householdId }) {
   const [planner, setPlanner] = useState(getStoredPlanner);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [now, setNow] = useState(() => new Date());
-  const menuListRefs = useRef({});
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(planner));
@@ -97,35 +101,17 @@ function Planner({ recipes, session, householdId }) {
   const today = useMemo(() => getTodayInfo(now), [now]);
   const upcomingMeal = useMemo(() => getUpcomingMeal(now), [now]);
 
-  const todayMenus = useMemo(() => PEOPLE.map((person) => {
-    const dayPlan = planner?.[person]?.[today.key] || {};
-    return {
-      person,
-      meals: MEAL_SLOTS.map((meal) => ({ meal, name: dayPlan?.[meal]?.name || "Sin preparación asignada" })),
-    };
-  }), [planner, today.key]);
-
-  useEffect(() => {
-    const centerCurrentMeal = () => {
-      PEOPLE.forEach((person) => {
-        const list = menuListRefs.current[person];
-        if (!list) return;
-        const active = list.querySelector(".is-next");
-        if (!active) return;
-
-        const targetTop = active.offsetTop - (list.clientHeight - active.offsetHeight) / 2;
-        list.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
-      });
-    };
-
-    const frame = window.requestAnimationFrame(centerCurrentMeal);
-    const timeout = window.setTimeout(centerCurrentMeal, 90);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.clearTimeout(timeout);
-    };
-  }, [todayMenus, upcomingMeal]);
+  const dailyTimeline = useMemo(() => {
+    return MEAL_SLOTS.map(({ meal, time }) => ({
+      meal,
+      time,
+      isCurrent: meal === upcomingMeal,
+      people: PEOPLE.map((person) => ({
+        person,
+        name: planner?.[person]?.[today.key]?.[meal]?.name || "Sin preparación asignada",
+      })),
+    }));
+  }, [planner, today.key, upcomingMeal]);
 
   async function saveMeal(person, day, meal, mealData) {
     if (!session?.access_token || !householdId) return;
@@ -221,33 +207,38 @@ function Planner({ recipes, session, householdId }) {
           <div className="planner-day-badge"><small>Hoy</small><span>{today.key}</span></div>
         </div>
 
-        <div className="today-menu-grid compact-today-grid no-print">
-          {todayMenus.map((entry) => (
-            <article className="today-menu-card compact-today-card" key={entry.person}>
-              <div className="today-menu-card-header">
-                <strong>{entry.person}</strong>
-                <span>Ahora · {upcomingMeal}</span>
+        <div className="shared-day-timeline no-print" aria-label="Menú de hoy">
+          {dailyTimeline.map(({ meal, time, isCurrent, people }, index) => (
+            <div className={`shared-meal-row ${isCurrent ? "is-current" : ""}`} key={meal}>
+              <div className="timeline-rail" aria-hidden="true">
+                <span className="timeline-dot" />
+                {index < dailyTimeline.length - 1 && <span className="timeline-line" />}
               </div>
-              <div
-                className="today-menu-list mini-meal-scroll"
-                ref={(node) => { menuListRefs.current[entry.person] = node; }}
-                aria-label={`Menú de hoy para ${entry.person}`}
-              >
-                {entry.meals.map(({ meal, name }) => (
-                  <div className={`today-menu-row mini-meal-row ${meal === upcomingMeal ? "is-next" : ""}`} key={meal}>
-                    <span>{meal}</span>
-                    <strong>{name}</strong>
-                    {meal === upcomingMeal && <small>Ahora</small>}
+
+              <div className="shared-meal-label">
+                <strong>{meal}</strong>
+                <small>{time}</small>
+              </div>
+
+              <div className="shared-meal-people">
+                {people.map(({ person, name }) => (
+                  <div className="shared-person-meal" key={person}>
+                    <span className={`person-mini-badge ${person === "Victoria" ? "victoria" : "leo"}`}>{person.charAt(0)}</span>
+                    <span>{name}</span>
                   </div>
                 ))}
               </div>
-            </article>
+
+              {isCurrent && <span className="current-meal-pill">Ahora</span>}
+              <span className="shared-meal-chevron" aria-hidden="true">›</span>
+            </div>
           ))}
         </div>
 
         <div className="planner-summary-card compact-summary no-print">
           <div className="planner-summary-content">
             <div className="planner-summary-count"><span aria-hidden="true">▦</span><strong>{recipes.length === 1 ? "1 preparación disponible" : `${recipes.length} preparaciones disponibles`}</strong></div>
+            <p>Aquí aparecerán tus recetas para asignar al día de hoy.</p>
           </div>
         </div>
 
