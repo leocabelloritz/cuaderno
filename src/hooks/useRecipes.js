@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { initialRecipes } from "../data/initialRecipes";
 import {
   createRecipe,
@@ -34,7 +34,8 @@ function mapRemoteRecipe(recipe) {
 }
 
 function useRecipes({ session, householdId } = {}) {
-  const [recipes, setRecipes] = useState(getStoredRecipes);
+  const localImportSnapshot = useRef(getStoredRecipes());
+  const [recipes, setRecipes] = useState(localImportSnapshot.current);
   const [syncing, setSyncing] = useState(false);
   const [syncError, setSyncError] = useState("");
 
@@ -71,12 +72,7 @@ function useRecipes({ session, householdId } = {}) {
     if (!session?.access_token || !householdId) return newRecipe;
 
     try {
-      const saved = await createRecipe(
-        session.access_token,
-        householdId,
-        session.user?.id,
-        newRecipe,
-      );
+      const saved = await createRecipe(session.access_token, householdId, session.user?.id, newRecipe);
       const mapped = mapRemoteRecipe(saved);
       setRecipes((current) => current.map((recipe) => recipe.id === newRecipe.id ? mapped : recipe));
       return mapped;
@@ -104,20 +100,23 @@ function useRecipes({ session, householdId } = {}) {
   async function importLocalRecipes() {
     if (!session?.access_token || !householdId) return;
 
-    const localRecipes = getStoredRecipes();
+    const localRecipes = localImportSnapshot.current;
+    if (!localRecipes.length) return;
+
     setSyncing(true);
     setSyncError("");
     try {
-      for (const recipe of localRecipes) {
-        await createRecipe(
-          session.access_token,
-          householdId,
-          session.user?.id,
-          { ...recipe, id: recipe.id || crypto.randomUUID() },
-        );
-      }
       const remote = await fetchRecipes(session.access_token, householdId);
-      setRecipes(remote.map(mapRemoteRecipe));
+      const existingIds = new Set(remote.map((recipe) => recipe.id));
+
+      for (const recipe of localRecipes) {
+        const candidate = { ...recipe, id: recipe.id || crypto.randomUUID() };
+        if (existingIds.has(candidate.id)) continue;
+        await createRecipe(session.access_token, householdId, session.user?.id, candidate);
+      }
+
+      const refreshed = await fetchRecipes(session.access_token, householdId);
+      setRecipes(refreshed.map(mapRemoteRecipe));
     } catch (error) {
       setSyncError(error.message);
       throw error;
