@@ -9,6 +9,7 @@ import './styles/selected-look.css'
 import './styles/compact-interactions.css'
 import './styles/weekly-cards.css'
 import './styles/latest-fixes.css'
+import './styles/loading-screen.css'
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
