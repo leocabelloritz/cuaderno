@@ -66,7 +66,13 @@ function CopyIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2"/><rect x="5" y="5" width="10" height="10" rx="2"/></svg>;
 }
 function ImportIcon() {
-  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10m0 0 4-4m-4 4-4-4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/></svg>;
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3.5 7.5h6l2 2h9v8.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V7.5Z" />
+      <path d="M12 5v8" />
+      <path d="m8.8 9.8 3.2 3.2 3.2-3.2" />
+    </svg>
+  );
 }
 function LogoutIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 16l4-4-4-4M19 12H9m6 7H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h8"/></svg>;
@@ -166,8 +172,8 @@ function App() {
         </div>
 
         <div className="account-actions">
-          <button type="button" className="account-action-button" onClick={importLocalRecipes}><ImportIcon /><span>Importar recetas locales</span></button>
-          <button type="button" className="account-action-button" onClick={handleSignOut}><LogoutIcon /><span>Cerrar sesión</span></button>
+          <button type="button" className="account-action-button" onClick={importLocalRecipes} aria-label="Importar recetas locales" title="Importar recetas locales"><ImportIcon /><span>Importar recetas locales</span></button>
+          <button type="button" className="account-action-button" onClick={handleSignOut} aria-label="Cerrar sesión" title="Cerrar sesión"><LogoutIcon /><span>Cerrar sesión</span></button>
         </div>
       </section>
 
