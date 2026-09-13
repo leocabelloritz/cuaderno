@@ -69,6 +69,44 @@
   stroke-linejoin: round;
 }
 
+.compact-code-block {
+  display: grid;
+  align-content: center;
+  justify-items: end;
+  gap: 10px;
+  min-width: 0;
+  text-align: right;
+}
+
+.account-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  width: min(360px, 100%);
+}
+
+.toggle-code-button {
+  min-height: 34px;
+  padding: 0 12px;
+  color: var(--selected-olive);
+  background: rgba(255, 255, 255, .42);
+  border: 1px solid #d8cfbf;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.toggle-code-button:hover,
+.toggle-code-button:active {
+  background: rgba(75, 86, 63, .08);
+}
+
+.compact-code-box {
+  width: min(320px, 100%);
+}
+
 .compact-daily-heading {
   align-items: end;
 }
@@ -107,6 +145,7 @@
 }
 
 .shared-meal-row.is-current {
+  padding-right: 104px;
   background: rgba(75, 86, 63, .08);
 }
 
@@ -207,13 +246,18 @@
 }
 
 .current-meal-pill {
-  margin-left: 12px;
-  padding: 7px 11px;
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 2;
+  margin-left: 0;
+  padding: 6px 10px;
   color: #fffdf8;
   background: var(--selected-olive);
   border-radius: 999px;
-  font-size: .58rem;
+  font-size: .54rem;
   font-weight: 700;
+  line-height: 1;
   letter-spacing: .12em;
   text-transform: uppercase;
 }
@@ -336,8 +380,22 @@
     max-width: 74px;
   }
 
-  .account-code-block {
+  .compact-code-block {
+    justify-items: end;
     padding-top: 12px;
+    text-align: right;
+  }
+
+  .account-code-header {
+    justify-content: flex-end;
+    gap: 10px;
+    width: 50%;
+    min-width: 260px;
+  }
+
+  .compact-code-box {
+    width: 50%;
+    min-width: 260px;
   }
 
   .compact-daily-heading {
@@ -370,6 +428,10 @@
     padding: 0 10px 0 8px;
   }
 
+  .shared-meal-row.is-current {
+    padding-right: 96px;
+  }
+
   .shared-meal-label {
     padding-left: 5px;
   }
@@ -398,8 +460,9 @@
   }
 
   .current-meal-pill {
-    margin-left: 7px;
-    padding: 6px 8px;
+    top: 10px;
+    right: 10px;
+    padding: 5px 9px;
     font-size: .5rem;
   }
 
@@ -417,18 +480,26 @@
     font-size: .7rem;
   }
 
+  .account-code-header,
+  .compact-code-box {
+    width: 58%;
+    min-width: 0;
+  }
+
+  .account-code-label {
+    white-space: nowrap;
+  }
+
   .shared-meal-row {
     grid-template-columns: 22px 92px minmax(0, 1fr) 15px;
   }
 
-  .current-meal-pill {
-    position: absolute;
-    right: 24px;
-    top: 8px;
+  .shared-meal-row.is-current {
+    padding-right: 88px;
   }
 
-  .shared-meal-row.is-current .shared-meal-people {
-    padding-top: 12px;
+  .shared-person-meal > span:last-child {
+    padding-right: 4px;
   }
 
   .shared-meal-chevron {
