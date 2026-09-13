@@ -39,10 +39,6 @@
   line-height: 1.15;
 }
 
-.account-action-button:first-child {
-  border-right: 1px solid var(--selected-line) !important;
-}
-
 .account-action-button::before,
 .account-action-button::after {
   display: none !important;
@@ -52,8 +48,7 @@
 .account-action-button:hover,
 .account-action-button:active,
 .account-action-button:focus {
-  border-top: 0 !important;
-  border-bottom: 0 !important;
+  border: 0 !important;
   box-shadow: none !important;
   transform: none !important;
 }
@@ -268,7 +263,7 @@
 
 @media (max-width: 900px) {
   .account-strip {
-    grid-template-columns: minmax(0, 1fr) minmax(220px, .9fr);
+    grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "identity actions"
       "code code";
@@ -296,7 +291,7 @@
 
 @media (max-width: 700px) {
   .account-strip {
-    grid-template-columns: minmax(0, 1fr) minmax(150px, .72fr);
+    grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "identity actions"
       "code code";
@@ -304,7 +299,7 @@
   }
 
   .account-identity {
-    padding: 0 8px 12px 0;
+    padding: 0 10px 12px 0;
   }
 
   .account-avatar {
