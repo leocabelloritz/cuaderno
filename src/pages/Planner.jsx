@@ -229,7 +229,6 @@ function Planner({ recipes, session, householdId }) {
                 ))}
               </div>
 
-              {isCurrent && <span className="current-meal-pill">Ahora</span>}
               <span className="shared-meal-chevron" aria-hidden="true">›</span>
             </div>
           ))}
