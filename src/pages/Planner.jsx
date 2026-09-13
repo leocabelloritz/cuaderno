@@ -106,16 +106,25 @@ function Planner({ recipes, session, householdId }) {
   }), [planner, today.key]);
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
+    const centerCurrentMeal = () => {
       PEOPLE.forEach((person) => {
         const list = menuListRefs.current[person];
         if (!list) return;
         const active = list.querySelector(".is-next");
         if (!active) return;
-        list.scrollTop = Math.max(0, active.offsetTop - list.offsetTop - 6);
+
+        const targetTop = active.offsetTop - (list.clientHeight - active.offsetHeight) / 2;
+        list.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
       });
-    });
-    return () => window.cancelAnimationFrame(frame);
+    };
+
+    const frame = window.requestAnimationFrame(centerCurrentMeal);
+    const timeout = window.setTimeout(centerCurrentMeal, 90);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
   }, [todayMenus, upcomingMeal]);
 
   async function saveMeal(person, day, meal, mealData) {
