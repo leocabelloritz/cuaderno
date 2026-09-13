@@ -159,6 +159,13 @@ function App() {
     return session?.user?.email?.split("@")[0] || "Cuenta";
   }, [membership, session]);
 
+  const accountInitial = accountLabel?.trim()?.charAt(0)?.toUpperCase() || "C";
+
+  async function handleCopyInviteCode() {
+    if (!household?.invite_code || !navigator?.clipboard) return;
+    await navigator.clipboard.writeText(household.invite_code);
+  }
+
   if (booting) {
     return <main className="auth-shell"><section className="auth-card"><p>Cargando Cuaderno…</p></section></main>;
   }
@@ -181,22 +188,44 @@ function App() {
 
       <Header />
 
-      <div className="account-strip no-print">
-        <div>
-          <span className="sync-dot" aria-hidden="true" />
-          <strong>{accountLabel}</strong>
-          <span>{household?.name || "Hogar"}</span>
-          {syncing && <small>Sincronizando…</small>}
-          {!syncing && !syncError && <small>Sincronizado</small>}
-          {syncError && <small className="sync-error">{syncError}</small>}
+      <section className="account-strip no-print" aria-label="Cuenta y sincronización">
+        <div className="account-identity">
+          <div className="account-avatar" aria-hidden="true">{accountInitial}</div>
+          <div className="account-copy">
+            <strong>{accountLabel}</strong>
+            <div className="account-meta">
+              <span>{household?.name || "Hogar"}</span>
+              <span className="sync-dot" aria-hidden="true" />
+              {syncing && <small>Sincronizando…</small>}
+              {!syncing && !syncError && <small>Sincronizado</small>}
+              {syncError && <small className="sync-error">{syncError}</small>}
+            </div>
+          </div>
+        </div>
+
+        <div className="account-code-block">
+          <span className="account-code-label">Código de dispositivo</span>
+          {household?.invite_code ? (
+            <button type="button" className="invite-code" onClick={handleCopyInviteCode} title="Copiar código">
+              <strong>{household.invite_code}</strong>
+              <span aria-hidden="true">▢</span>
+            </button>
+          ) : (
+            <span className="invite-code"><strong>Sin código</strong></span>
+          )}
         </div>
 
         <div className="account-actions">
-          <button type="button" className="text-button" onClick={importLocalRecipes}>Importar recetas locales</button>
-          {household?.invite_code && <span className="invite-code">Código: {household.invite_code}</span>}
-          <button type="button" className="text-button" onClick={handleSignOut}>Cerrar sesión</button>
+          <button type="button" className="account-action-button" onClick={importLocalRecipes}>
+            <span aria-hidden="true">⚙︎</span>
+            Importar recetas locales
+          </button>
+          <button type="button" className="account-action-button" onClick={handleSignOut}>
+            <span aria-hidden="true">↗</span>
+            Cerrar sesión
+          </button>
         </div>
-      </div>
+      </section>
 
       <Navigation activeView={activeView} onChangeView={setActiveView} />
 
