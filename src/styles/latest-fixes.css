@@ -44,17 +44,21 @@
   transform: none !important;
 }
 
-/* Botón cerrar modal: círculo y X ópticamente centrados */
+/* Botón cerrar modal: solo X, sin círculo */
 .modal-close-button {
   display: grid !important;
   place-items: center !important;
-  width: 52px !important;
-  height: 52px !important;
-  min-width: 52px !important;
-  min-height: 52px !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
   padding: 0 !important;
+  color: #746d61 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   line-height: 1 !important;
-  border-radius: 50% !important;
   text-align: center !important;
   font-size: 0 !important;
 }
@@ -63,10 +67,14 @@
   content: "×";
   display: block;
   color: currentColor;
-  font-size: 1.7rem;
-  font-weight: 500;
+  font-size: 2rem;
+  font-weight: 400;
   line-height: 1;
-  transform: translateY(-1px);
+}
+
+.modal-close-button:hover {
+  color: #302d27 !important;
+  background: transparent !important;
 }
 
 @media (max-width: 700px) {
@@ -139,10 +147,10 @@
   }
 
   .modal-close-button {
-    width: 50px !important;
-    height: 50px !important;
-    min-width: 50px !important;
-    min-height: 50px !important;
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
   }
 }
 
