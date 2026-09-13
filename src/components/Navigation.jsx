@@ -3,24 +3,20 @@ function Navigation({ activeView, onChangeView }) {
     <nav className="main-navigation" aria-label="Navegación principal">
       <button
         type="button"
-        className={`navigation-button ${
-          activeView === "planner" ? "active" : ""
-        }`}
+        className={`navigation-button ${activeView === "planner" ? "active" : ""}`}
         onClick={() => onChangeView("planner")}
       >
-        <span aria-hidden="true">▦</span>
-        Planificador
+        <span className="navigation-icon" aria-hidden="true">⌑</span>
+        <strong>Planificador</strong>
       </button>
 
       <button
         type="button"
-        className={`navigation-button ${
-          activeView === "recipes" ? "active" : ""
-        }`}
+        className={`navigation-button ${activeView === "recipes" ? "active" : ""}`}
         onClick={() => onChangeView("recipes")}
       >
-        <span aria-hidden="true">▤</span>
-        Preparaciones
+        <span className="navigation-icon" aria-hidden="true">▤</span>
+        <strong>Preparaciones</strong>
       </button>
     </nav>
   );
