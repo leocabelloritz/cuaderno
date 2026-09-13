@@ -9,17 +9,17 @@ import {
 } from "../services/supabaseService";
 
 const STORAGE_KEY = "cuaderno-planner";
+const PEOPLE = ["Victoria", "Leo"];
+const MEAL_SLOTS = ["Desayuno", "Almuerzo", "Merienda", "Cena"];
 
 function migrateMealNames(planner) {
   const migratedPlanner = structuredClone(planner || {});
-
   Object.values(migratedPlanner).forEach((personPlanner) => {
     Object.values(personPlanner || {}).forEach((dayPlanner) => {
       if (dayPlanner?.Once && !dayPlanner?.Merienda) dayPlanner.Merienda = dayPlanner.Once;
       if (dayPlanner?.Once) delete dayPlanner.Once;
     });
   });
-
   return migratedPlanner;
 }
 
@@ -34,11 +34,9 @@ function getStoredPlanner() {
 
 function remoteRowsToPlanner(rows) {
   const next = {};
-
   (rows || []).forEach((row) => {
     if (!next[row.person]) next[row.person] = {};
     if (!next[row.person][row.day]) next[row.person][row.day] = {};
-
     next[row.person][row.day][row.meal] = {
       id: row.recipe_id,
       name: row.recipe_name,
@@ -50,8 +48,27 @@ function remoteRowsToPlanner(rows) {
       servings: Number(row.servings ?? 1),
     };
   });
-
   return migrateMealNames(next);
+}
+
+function capitalize(text = "") {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function getTodayInfo() {
+  const now = new Date();
+  return {
+    key: capitalize(new Intl.DateTimeFormat("es-CL", { weekday: "long" }).format(now)),
+    label: capitalize(new Intl.DateTimeFormat("es-CL", { weekday: "long", day: "numeric", month: "long" }).format(now)),
+  };
+}
+
+function getUpcomingMeal() {
+  const hour = new Date().getHours();
+  if (hour < 11) return "Desayuno";
+  if (hour < 16) return "Almuerzo";
+  if (hour < 20) return "Merienda";
+  return "Cena";
 }
 
 function Planner({ recipes, session, householdId }) {
@@ -64,43 +81,29 @@ function Planner({ recipes, session, householdId }) {
 
   useEffect(() => {
     if (!session?.access_token || !householdId) return;
-
     let cancelled = false;
-
     fetchPlanner(session.access_token, householdId)
-      .then((rows) => {
-        if (!cancelled) setPlanner(remoteRowsToPlanner(rows));
-      })
+      .then((rows) => { if (!cancelled) setPlanner(remoteRowsToPlanner(rows)); })
       .catch((error) => console.error("No fue posible sincronizar el menú:", error));
-
     return () => { cancelled = true; };
   }, [session?.access_token, householdId]);
 
-  const plannedMealsCount = useMemo(() => {
-    let count = 0;
-    Object.values(planner || {}).forEach((personPlanner) => {
-      Object.values(personPlanner || {}).forEach((dayPlanner) => {
-        count += Object.keys(dayPlanner || {}).length;
-      });
-    });
-    return count;
-  }, [planner]);
+  const today = useMemo(() => getTodayInfo(), []);
+  const upcomingMeal = useMemo(() => getUpcomingMeal(), []);
 
-  const edition = useMemo(() => {
-    const date = new Date();
+  const todayMenus = useMemo(() => PEOPLE.map((person) => {
+    const dayPlan = planner?.[person]?.[today.key] || {};
     return {
-      month: new Intl.DateTimeFormat("es-CL", { month: "short" }).format(date).replace(".", "").toUpperCase(),
-      year: date.getFullYear(),
+      person,
+      next: dayPlan?.[upcomingMeal]?.name || "Sin preparación asignada",
+      meals: MEAL_SLOTS.map((meal) => ({ meal, name: dayPlan?.[meal]?.name || "Sin preparación asignada" })),
     };
-  }, []);
+  }), [planner, today.key, upcomingMeal]);
 
   async function saveMeal(person, day, meal, mealData) {
     if (!session?.access_token || !householdId) return;
-
     await upsertPlannerEntry(session.access_token, householdId, session.user?.id, {
-      person,
-      day,
-      meal,
+      person, day, meal,
       recipeId: mealData.id,
       recipeName: mealData.name,
       portion: mealData.portion,
@@ -124,18 +127,13 @@ function Planner({ recipes, session, householdId }) {
       baseFat: recipe.fat ?? 0,
       servings: person === "Leo" ? 1.5 : 1,
     };
-
     setPlanner((currentPlanner) => ({
       ...currentPlanner,
       [person]: {
         ...currentPlanner[person],
-        [day]: {
-          ...currentPlanner[person]?.[day],
-          [meal]: mealData,
-        },
+        [day]: { ...currentPlanner[person]?.[day], [meal]: mealData },
       },
     }));
-
     saveMeal(person, day, meal, mealData).catch(console.error);
     setSelectedSlot(null);
   }
@@ -146,66 +144,39 @@ function Planner({ recipes, session, householdId }) {
       delete updatedPlanner[person]?.[day]?.[meal];
       return updatedPlanner;
     });
-
-    if (session?.access_token && householdId) {
-      deletePlannerEntry(session.access_token, householdId, person, day, meal).catch(console.error);
-    }
+    if (session?.access_token && householdId) deletePlannerEntry(session.access_token, householdId, person, day, meal).catch(console.error);
   }
 
   function handleChangeServings({ person, day, meal, change }) {
     const selectedMeal = planner[person]?.[day]?.[meal];
     if (!selectedMeal) return;
-
-    const currentServings = selectedMeal.servings ?? 1;
-    const newServings = Math.max(0.5, Number((currentServings + change).toFixed(1)));
+    const newServings = Math.max(0.5, Number(((selectedMeal.servings ?? 1) + change).toFixed(1)));
     const updatedMeal = { ...selectedMeal, servings: newServings };
-
     setPlanner((currentPlanner) => ({
       ...currentPlanner,
       [person]: {
         ...currentPlanner[person],
-        [day]: {
-          ...currentPlanner[person]?.[day],
-          [meal]: updatedMeal,
-        },
+        [day]: { ...currentPlanner[person]?.[day], [meal]: updatedMeal },
       },
     }));
-
     saveMeal(person, day, meal, updatedMeal).catch(console.error);
   }
 
   function handleCopyDay({ fromPerson, toPerson, day }) {
     const sourceMeals = planner[fromPerson]?.[day];
     if (!sourceMeals || Object.keys(sourceMeals).length === 0) return;
-
     const targetServings = toPerson === "Leo" ? 1.5 : 1;
-    const copiedMeals = Object.fromEntries(
-      Object.entries(sourceMeals).map(([mealName, mealData]) => [
-        mealName,
-        { ...mealData, servings: targetServings },
-      ]),
-    );
-
+    const copiedMeals = Object.fromEntries(Object.entries(sourceMeals).map(([mealName, mealData]) => [mealName, { ...mealData, servings: targetServings }]));
     setPlanner((currentPlanner) => ({
       ...currentPlanner,
-      [toPerson]: {
-        ...currentPlanner[toPerson],
-        [day]: copiedMeals,
-      },
+      [toPerson]: { ...currentPlanner[toPerson], [day]: copiedMeals },
     }));
-
-    Object.entries(copiedMeals).forEach(([mealName, mealData]) => {
-      saveMeal(toPerson, day, mealName, mealData).catch(console.error);
-    });
+    Object.entries(copiedMeals).forEach(([mealName, mealData]) => saveMeal(toPerson, day, mealName, mealData).catch(console.error));
   }
 
   function handleExportPdf() {
     const previousTitle = document.title;
-    const restoreTitle = () => {
-      document.title = previousTitle;
-      window.removeEventListener("afterprint", restoreTitle);
-    };
-
+    const restoreTitle = () => { document.title = previousTitle; window.removeEventListener("afterprint", restoreTitle); };
     document.title = "";
     window.addEventListener("afterprint", restoreTitle);
     window.print();
@@ -216,92 +187,55 @@ function Planner({ recipes, session, householdId }) {
       <section className="planner-intro planner-cover">
         <div className="planner-cover-main">
           <div className="page-introduction">
-            <p className="section-label">Planificación familiar</p>
-            <h2>El menú de esta semana</h2>
-            <p>Una vista simple de lo que vamos a comer, con porciones ajustadas para cada uno y el cálculo nutricional de las preparaciones.</p>
+            <p className="section-label">Planificación diaria</p>
+            <h2>El menú de hoy</h2>
+            <p>{today.label}. Según la hora, la próxima comida es <strong>{upcomingMeal.toLowerCase()}</strong>.</p>
           </div>
-
-          <div className="planner-edition" aria-label={`Edición ${edition.month} ${edition.year}`}>
-            <small>Edición<br />semanal</small>
-            <span>{edition.month}<br />{edition.year}</span>
-          </div>
+          <div className="planner-day-badge"><small>Hoy</small><span>{today.key}</span></div>
         </div>
 
-        <div className="planner-feature-row no-print">
-          <div className="planner-feature-card">
-            <span className="feature-icon" aria-hidden="true">●●●</span>
-            <div><strong>2 personas</strong><small>Porciones ajustadas</small></div>
-          </div>
-          <div className="planner-feature-card">
-            <span className="feature-icon" aria-hidden="true">◆</span>
-            <div><strong>Comida real</strong><small>Más equilibrio</small></div>
-          </div>
-          <div className="planner-feature-card">
-            <span className="feature-icon feature-bars" aria-hidden="true">▂▅▇</span>
-            <div><strong>Valor nutricional</strong><small>En cada receta</small></div>
-          </div>
+        <div className="today-menu-grid no-print">
+          {todayMenus.map((entry) => (
+            <article className="today-menu-card" key={entry.person}>
+              <div className="today-menu-card-header">
+                <strong>{entry.person}</strong>
+                <span>Próxima · {upcomingMeal}</span>
+              </div>
+              <div className="today-menu-highlight">
+                <small>Lo siguiente</small>
+                <strong>{entry.next}</strong>
+              </div>
+              <div className="today-menu-list">
+                {entry.meals.map(({ meal, name }) => (
+                  <div className={`today-menu-row ${meal === upcomingMeal ? "is-next" : ""}`} key={meal}>
+                    <span>{meal}</span><strong>{name}</strong>
+                  </div>
+                ))}
+              </div>
+            </article>
+          ))}
         </div>
 
         <div className="planner-summary-card no-print">
           <div className="planner-summary-content">
-            <div className="planner-summary-count">
-              <span aria-hidden="true">▦</span>
-              <strong>{recipes.length === 1 ? "1 preparación disponible" : `${recipes.length} preparaciones disponibles`}</strong>
-            </div>
-            <p>{plannedMealsCount > 0 ? `${plannedMealsCount} comidas ya están planificadas esta semana.` : "Aquí aparecerán tus recetas de la semana."}</p>
+            <div className="planner-summary-count"><span aria-hidden="true">▦</span><strong>{recipes.length === 1 ? "1 preparación disponible" : `${recipes.length} preparaciones disponibles`}</strong></div>
+            <p>Úsalas para completar el planificador semanal de abajo.</p>
           </div>
-          <div className="planner-summary-signature" aria-hidden="true">Planifica.<br />Cocina.<br />Vive mejor.</div>
         </div>
 
         <div className="planner-actions no-print">
-          <button type="button" className="pdf-button" onClick={handleExportPdf}>
-            <span aria-hidden="true">↓</span>
-            Descargar menú PDF
-          </button>
+          <button type="button" className="pdf-button" onClick={handleExportPdf}><span aria-hidden="true">↓</span>Descargar menú PDF</button>
         </div>
       </section>
 
-      <div className="print-only print-title">
-        <span>CUADERNO / MENÚ SEMANAL</span>
-        <strong>Victoria & Leo</strong>
-      </div>
+      <div className="print-only print-title"><span>CUADERNO / MENÚ SEMANAL</span><strong>Victoria & Leo</strong></div>
 
       <div className="planner-stack">
-        <WeeklyTable
-          person="Victoria"
-          targetPerson="Leo"
-          subtitle="Porción base: 1"
-          accent={colors.terracotta}
-          planner={planner}
-          onOpenSelector={setSelectedSlot}
-          onRemoveMeal={handleRemoveMeal}
-          onChangeServings={handleChangeServings}
-          onCopyDay={handleCopyDay}
-        />
-
-        <WeeklyTable
-          person="Leo"
-          targetPerson="Victoria"
-          subtitle="Porción base sugerida: 1,5"
-          accent={colors.olive}
-          planner={planner}
-          onOpenSelector={setSelectedSlot}
-          onRemoveMeal={handleRemoveMeal}
-          onChangeServings={handleChangeServings}
-          onCopyDay={handleCopyDay}
-        />
+        <WeeklyTable person="Victoria" targetPerson="Leo" subtitle="Porción base: 1" accent={colors.terracotta} planner={planner} onOpenSelector={setSelectedSlot} onRemoveMeal={handleRemoveMeal} onChangeServings={handleChangeServings} onCopyDay={handleCopyDay} />
+        <WeeklyTable person="Leo" targetPerson="Victoria" subtitle="Porción base sugerida: 1,5" accent={colors.olive} planner={planner} onOpenSelector={setSelectedSlot} onRemoveMeal={handleRemoveMeal} onChangeServings={handleChangeServings} onCopyDay={handleCopyDay} />
       </div>
 
-      {selectedSlot && (
-        <RecipeSelectorModal
-          recipes={recipes}
-          person={selectedSlot.person}
-          dayName={selectedSlot.day}
-          mealName={selectedSlot.meal}
-          onSelect={handleSelectRecipe}
-          onClose={() => setSelectedSlot(null)}
-        />
-      )}
+      {selectedSlot && <RecipeSelectorModal recipes={recipes} person={selectedSlot.person} dayName={selectedSlot.day} mealName={selectedSlot.meal} onSelect={handleSelectRecipe} onClose={() => setSelectedSlot(null)} />}
     </main>
   );
 }
