@@ -11,26 +11,27 @@
 }
 
 @media (max-width: 700px) {
-  /* Código de dispositivo: ocupa la mitad derecha y queda centrado allí */
+  /* Código de dispositivo: fila completa, equilibrada en dos mitades */
   .account-code-block.compact-code-block {
-    width: 50%;
-    justify-self: end;
-    justify-items: center;
+    width: 100%;
+    justify-self: stretch;
+    justify-items: stretch;
     align-content: center;
     padding: 14px 0 16px !important;
-    text-align: center;
+    text-align: initial;
   }
 
   .account-code-header {
     display: grid !important;
-    grid-template-columns: 1fr !important;
-    justify-items: center;
-    gap: 8px;
+    grid-template-columns: 1fr 1fr !important;
+    align-items: center;
+    gap: 0;
     width: 100% !important;
     min-width: 0 !important;
   }
 
   .account-code-label {
+    justify-self: center;
     white-space: normal !important;
     text-align: center;
     line-height: 1.35;
@@ -38,12 +39,15 @@
 
   .toggle-code-button {
     justify-self: center;
+    margin: 0;
   }
 
   .compact-code-box {
-    width: 100% !important;
+    grid-column: 1 / -1;
+    width: min(320px, 100%) !important;
     min-width: 0 !important;
-    margin: 0 auto;
+    margin: 10px auto 0;
+    justify-self: center;
   }
 
   .copy-feedback {
@@ -57,7 +61,15 @@
 
 @media (max-width: 430px) {
   .account-code-block.compact-code-block {
-    width: 50%;
+    width: 100%;
+  }
+
+  .account-code-header {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .account-code-label {
+    max-width: 130px;
   }
 
   .shared-meal-row.is-current {
