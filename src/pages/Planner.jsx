@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import RecipeSelectorModal from "../components/RecipeSelectorModal";
 import WeeklyTable from "../components/WeeklyTable";
 import { colors } from "../styles/theme";
@@ -75,6 +75,24 @@ function Planner({ recipes, session, householdId }) {
 
     return () => { cancelled = true; };
   }, [session?.access_token, householdId]);
+
+  const plannedMealsCount = useMemo(() => {
+    let count = 0;
+    Object.values(planner || {}).forEach((personPlanner) => {
+      Object.values(personPlanner || {}).forEach((dayPlanner) => {
+        count += Object.keys(dayPlanner || {}).length;
+      });
+    });
+    return count;
+  }, [planner]);
+
+  const edition = useMemo(() => {
+    const date = new Date();
+    return {
+      month: new Intl.DateTimeFormat("es-CL", { month: "short" }).format(date).replace(".", "").toUpperCase(),
+      year: date.getFullYear(),
+    };
+  }, []);
 
   async function saveMeal(person, day, meal, mealData) {
     if (!session?.access_token || !householdId) return;
@@ -195,18 +213,47 @@ function Planner({ recipes, session, householdId }) {
 
   return (
     <main className="page-content planner-page">
-      <section className="planner-intro">
-        <div className="page-introduction">
-          <p className="section-label">Planificación familiar</p>
-          <h2>El menú de esta semana</h2>
-          <p>Una vista simple de lo que vamos a comer, con porciones ajustadas para cada uno y el cálculo nutricional de las preparaciones.</p>
-          <p className="available-recipes-count">
-            {recipes.length === 1 ? "1 preparación disponible" : `${recipes.length} preparaciones disponibles`}
-          </p>
+      <section className="planner-intro planner-cover">
+        <div className="planner-cover-main">
+          <div className="page-introduction">
+            <p className="section-label">Planificación familiar</p>
+            <h2>El menú de esta semana</h2>
+            <p>Una vista simple de lo que vamos a comer, con porciones ajustadas para cada uno y el cálculo nutricional de las preparaciones.</p>
+          </div>
+
+          <div className="planner-edition" aria-label={`Edición ${edition.month} ${edition.year}`}>
+            <small>Edición<br />semanal</small>
+            <span>{edition.month}<br />{edition.year}</span>
+          </div>
+        </div>
+
+        <div className="planner-feature-row no-print">
+          <div className="planner-feature-card">
+            <span className="feature-icon" aria-hidden="true">●●●</span>
+            <div><strong>2 personas</strong><small>Porciones ajustadas</small></div>
+          </div>
+          <div className="planner-feature-card">
+            <span className="feature-icon" aria-hidden="true">◆</span>
+            <div><strong>Comida real</strong><small>Más equilibrio</small></div>
+          </div>
+          <div className="planner-feature-card">
+            <span className="feature-icon feature-bars" aria-hidden="true">▂▅▇</span>
+            <div><strong>Valor nutricional</strong><small>En cada receta</small></div>
+          </div>
+        </div>
+
+        <div className="planner-summary-card no-print">
+          <div className="planner-summary-content">
+            <div className="planner-summary-count">
+              <span aria-hidden="true">▦</span>
+              <strong>{recipes.length === 1 ? "1 preparación disponible" : `${recipes.length} preparaciones disponibles`}</strong>
+            </div>
+            <p>{plannedMealsCount > 0 ? `${plannedMealsCount} comidas ya están planificadas esta semana.` : "Aquí aparecerán tus recetas de la semana."}</p>
+          </div>
+          <div className="planner-summary-signature" aria-hidden="true">Planifica.<br />Cocina.<br />Vive mejor.</div>
         </div>
 
         <div className="planner-actions no-print">
-          <span className="planner-actions-note">Edición semanal</span>
           <button type="button" className="pdf-button" onClick={handleExportPdf}>
             <span aria-hidden="true">↓</span>
             Descargar menú PDF
