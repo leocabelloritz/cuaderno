@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import RecipeSelectorModal from "../components/RecipeSelectorModal";
 import WeeklyTable from "../components/WeeklyTable";
 import { colors } from "../styles/theme";
@@ -55,16 +55,15 @@ function capitalize(text = "") {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function getTodayInfo() {
-  const now = new Date();
+function getTodayInfo(date = new Date()) {
   return {
-    key: capitalize(new Intl.DateTimeFormat("es-CL", { weekday: "long" }).format(now)),
-    label: capitalize(new Intl.DateTimeFormat("es-CL", { weekday: "long", day: "numeric", month: "long" }).format(now)),
+    key: capitalize(new Intl.DateTimeFormat("es-CL", { weekday: "long" }).format(date)),
+    label: capitalize(new Intl.DateTimeFormat("es-CL", { weekday: "long", day: "numeric", month: "long" }).format(date)),
   };
 }
 
-function getUpcomingMeal() {
-  const hour = new Date().getHours();
+function getUpcomingMeal(date = new Date()) {
+  const hour = date.getHours();
   if (hour < 11) return "Desayuno";
   if (hour < 16) return "Almuerzo";
   if (hour < 20) return "Merienda";
@@ -74,10 +73,17 @@ function getUpcomingMeal() {
 function Planner({ recipes, session, householdId }) {
   const [planner, setPlanner] = useState(getStoredPlanner);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [now, setNow] = useState(() => new Date());
+  const menuListRefs = useRef({});
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(planner));
   }, [planner]);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 60000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (!session?.access_token || !householdId) return;
@@ -88,17 +94,29 @@ function Planner({ recipes, session, householdId }) {
     return () => { cancelled = true; };
   }, [session?.access_token, householdId]);
 
-  const today = useMemo(() => getTodayInfo(), []);
-  const upcomingMeal = useMemo(() => getUpcomingMeal(), []);
+  const today = useMemo(() => getTodayInfo(now), [now]);
+  const upcomingMeal = useMemo(() => getUpcomingMeal(now), [now]);
 
   const todayMenus = useMemo(() => PEOPLE.map((person) => {
     const dayPlan = planner?.[person]?.[today.key] || {};
     return {
       person,
-      next: dayPlan?.[upcomingMeal]?.name || "Sin preparación asignada",
       meals: MEAL_SLOTS.map((meal) => ({ meal, name: dayPlan?.[meal]?.name || "Sin preparación asignada" })),
     };
-  }), [planner, today.key, upcomingMeal]);
+  }), [planner, today.key]);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      PEOPLE.forEach((person) => {
+        const list = menuListRefs.current[person];
+        if (!list) return;
+        const active = list.querySelector(".is-next");
+        if (!active) return;
+        list.scrollTop = Math.max(0, active.offsetTop - list.offsetTop - 6);
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [todayMenus, upcomingMeal]);
 
   async function saveMeal(person, day, meal, mealData) {
     if (!session?.access_token || !householdId) return;
@@ -185,30 +203,32 @@ function Planner({ recipes, session, householdId }) {
   return (
     <main className="page-content planner-page">
       <section className="planner-intro planner-cover">
-        <div className="planner-cover-main">
+        <div className="planner-cover-main compact-daily-heading">
           <div className="page-introduction">
             <p className="section-label">Planificación diaria</p>
             <h2>El menú de hoy</h2>
-            <p>{today.label}. Según la hora, la próxima comida es <strong>{upcomingMeal.toLowerCase()}</strong>.</p>
+            <p>{today.label} · ahora corresponde <strong>{upcomingMeal.toLowerCase()}</strong>.</p>
           </div>
           <div className="planner-day-badge"><small>Hoy</small><span>{today.key}</span></div>
         </div>
 
-        <div className="today-menu-grid no-print">
+        <div className="today-menu-grid compact-today-grid no-print">
           {todayMenus.map((entry) => (
-            <article className="today-menu-card" key={entry.person}>
+            <article className="today-menu-card compact-today-card" key={entry.person}>
               <div className="today-menu-card-header">
                 <strong>{entry.person}</strong>
-                <span>Próxima · {upcomingMeal}</span>
+                <span>Ahora · {upcomingMeal}</span>
               </div>
-              <div className="today-menu-highlight">
-                <small>Lo siguiente</small>
-                <strong>{entry.next}</strong>
-              </div>
-              <div className="today-menu-list">
+              <div
+                className="today-menu-list mini-meal-scroll"
+                ref={(node) => { menuListRefs.current[entry.person] = node; }}
+                aria-label={`Menú de hoy para ${entry.person}`}
+              >
                 {entry.meals.map(({ meal, name }) => (
-                  <div className={`today-menu-row ${meal === upcomingMeal ? "is-next" : ""}`} key={meal}>
-                    <span>{meal}</span><strong>{name}</strong>
+                  <div className={`today-menu-row mini-meal-row ${meal === upcomingMeal ? "is-next" : ""}`} key={meal}>
+                    <span>{meal}</span>
+                    <strong>{name}</strong>
+                    {meal === upcomingMeal && <small>Ahora</small>}
                   </div>
                 ))}
               </div>
@@ -216,10 +236,9 @@ function Planner({ recipes, session, householdId }) {
           ))}
         </div>
 
-        <div className="planner-summary-card no-print">
+        <div className="planner-summary-card compact-summary no-print">
           <div className="planner-summary-content">
             <div className="planner-summary-count"><span aria-hidden="true">▦</span><strong>{recipes.length === 1 ? "1 preparación disponible" : `${recipes.length} preparaciones disponibles`}</strong></div>
-            <p>Úsalas para completar el planificador semanal de abajo.</p>
           </div>
         </div>
 
