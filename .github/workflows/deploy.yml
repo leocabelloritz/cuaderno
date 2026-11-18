@@ -43,7 +43,7 @@ jobs:
       - name: Incluir RECUPERA en el sitio publicado
         run: |
           mkdir -p dist/recupera
-          cp recupera/index.html dist/recupera/index.html
+          cp -R recupera/. dist/recupera/
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
