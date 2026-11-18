@@ -207,7 +207,24 @@ async function refreshToken(){
 function clean(x){const z={...blank(),...(x||{})};for(const k of ['measures','sos','meds','takes'])if(!Array.isArray(z[k]))z[k]=[];return z}
 function merge(a,b){const z=clean(a);for(const k of ['measures','sos','meds','takes']){let ids=new Set(z[k].map(x=>x.id));for(let x of b[k]||[])if(x&&x.id&&!ids.has(x.id)){z[k].push(x);ids.add(x.id)}}if(b.interval&&b.interval!==3)z.interval=b.interval;return z}
 async function fetchCloud(){await refreshToken();const x=await api('/rest/v1/recupera_state?user_id=eq.'+owner+'&select=payload');return Array.isArray(x)&&x.length?x[0].payload:null}
-async function pushCloud(){await refreshToken();await api('/rest/v1/recupera_state?on_conflict=user_id','POST',{user_id:owner,payload:data,updated_at:new Date().toISOString()})}
+async function pushCloud(){
+ await refreshToken();
+ const path='/rest/v1/recupera_state?user_id=eq.'+encodeURIComponent(owner)+'&select=user_id';
+ const record={payload:data,updated_at:new Date().toISOString()};
+ const patch=async()=>{
+  const res=await fetch(CLOUD_URL+path,{method:'PATCH',headers:{apikey:CLOUD_KEY,'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'Prefer':'return=representation'},body:JSON.stringify(record)});
+  const raw=await res.text();let rows;try{rows=raw?JSON.parse(raw):[]}catch(e){rows=[]}
+  if(!res.ok)throw Error(rows?.message||rows?.error||'Error guardando cambios: '+res.status);
+  return Array.isArray(rows)&&rows.length>0;
+ };
+ if(await patch())return;
+ try{
+  await api('/rest/v1/recupera_state','POST',{user_id:owner,...record});
+ }catch(err){
+  if(/duplicate key|23505|recupera_state_pkey/i.test(err.message)){if(await patch())return}
+  throw err;
+ }
+}
 async function connect(s){
  remember({...s,expires_at:s.expires_at||Math.floor(Date.now()/1000)+s.expires_in});
  const u=await api('/auth/v1/user');owner=u.id;ready=false;status('↻ Sincronizando…');
