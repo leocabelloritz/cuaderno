@@ -40,6 +40,11 @@ jobs:
       - name: Construir aplicación
         run: npm run build
 
+      - name: Incluir RECUPERA en el sitio publicado
+        run: |
+          mkdir -p dist/recupera
+          cp recupera/index.html dist/recupera/index.html
+
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
 
