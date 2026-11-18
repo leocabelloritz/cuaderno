@@ -114,9 +114,41 @@ input[type="datetime-local"]::-webkit-datetime-edit-minute-field{
   #sosForm .fields{grid-template-columns:1fr !important;}
 }
 
+
+/* RECUPERA — animated cardiac monitor launch */
+#recuperaLaunch{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:radial-gradient(circle at 50% 43%,#24272d 0%,#131518 38%,#090a0c 100%);color:#e5e6ea;overflow:hidden;animation:launchExit 4.7s ease-in-out both;isolation:isolate}
+#recuperaLaunch::before{content:"";position:absolute;inset:0;opacity:.22;background:repeating-linear-gradient(0deg,transparent 0 3px,#ffffff08 4px);pointer-events:none}
+.launchInner{width:min(86vw,390px);display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
+.launchMonitor{position:relative;width:min(72vw,285px);aspect-ratio:1;background:#17191c;border:1px solid #363a41;border-radius:28%;box-shadow:0 25px 70px #0009,inset 0 1px #ffffff12;display:grid;place-items:center;animation:launchBreath 2.05s ease-in-out 2}
+.launchMonitor:after{content:"";position:absolute;inset:8%;border:1px dashed #464a52;border-radius:50%;opacity:.45}
+.launchEcg{width:83%;height:auto;overflow:visible;filter:drop-shadow(0 0 7px #e7eaf344)}
+.launchEcg path{fill:none;stroke:#e5e8ec;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:100;stroke-dashoffset:100;animation:launchTrace 2.05s cubic-bezier(.3,.05,.4,1) 2}
+.launchPulse{position:absolute;width:18px;height:18px;border-radius:50%;background:#f0f1f3;box-shadow:0 0 18px #ffffffa8;bottom:16%;left:calc(50% - 9px);opacity:0;animation:launchBeat 2.05s ease-in-out 2}
+.launchWord{font:700 18px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.24em;color:#f0f0f3}
+.launchCaption{font:500 11px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;color:#9399a4;text-transform:uppercase;animation:launchCaptionPulse 2.05s ease-in-out 2}
+.launchSkip{position:absolute;bottom:max(38px,env(safe-area-inset-bottom));right:22px;border:1px solid #434750;background:#24262b;color:#d1d3d9;border-radius:99px;padding:10px 16px;min-height:40px;font:500 12px ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer}
+@keyframes launchTrace{0%,11%{stroke-dashoffset:100;opacity:.2}62%,85%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:.65}}
+@keyframes launchBreath{0%,38%,100%{box-shadow:0 25px 70px #0009,inset 0 1px #ffffff12;transform:scale(1)}57%{box-shadow:0 25px 70px #0009,0 0 38px #aeb6c42e,inset 0 1px #ffffff20;transform:scale(1.025)}}
+@keyframes launchBeat{0%,37%,70%,100%{opacity:0;transform:scale(.6)}46%{opacity:.85;transform:scale(1.2)}}
+@keyframes launchCaptionPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes launchExit{0%,87%{opacity:1;visibility:visible;pointer-events:auto}100%{opacity:0;visibility:hidden;pointer-events:none}}
+@media(prefers-reduced-motion:reduce){#recuperaLaunch{animation-duration:.45s}.launchMonitor,.launchEcg path,.launchPulse,.launchCaption{animation:none}.launchEcg path{stroke-dashoffset:0}.launchSkip{display:none}}
+
 </style>
 </head>
-<body><div class="shell">
+<body><div id="recuperaLaunch" role="status" aria-label="Iniciando RECUPERA" aria-live="off">
+  <div class="launchInner">
+    <div class="launchMonitor" aria-hidden="true">
+      <svg class="launchEcg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <path pathLength="100" d="M17 133 H67 L91 91 L127 173 L155 112 L169 133 H239"/>
+      </svg>
+      <span class="launchPulse"></span>
+    </div>
+    <div class="launchWord">RECUPERA</div>
+    <div class="launchCaption">INICIANDO MONITOR ···</div>
+  </div>
+  <button type="button" class="launchSkip" onclick="document.getElementById('recuperaLaunch')?.remove()">Omitir intro</button>
+</div><div class="shell">
 <header><div><div class="brand">RECU<em>PERA</em> / TRACKER</div><div class="logoLine"></div></div><span class="tag">Seguimiento local · privado</span></header>
 <div class="eyebrow">Monitoreo personal</div><h1 class="heading">Seguimiento respiratorio</h1><p class="lead" id="todayLabel">Registra saturación, pulso, medicamentos y uso SOS.</p>
 <div class="daily" aria-label="Resumen de hoy"><div class="daily-title"><span class="live-dot"></span><span>01 / ESTADO DE HOY</span><span id="dayDate" class="daily-date"></span></div><div class="daily-kpis"><div><strong id="todayMeasures">0</strong><small>MEDICIONES</small></div><div><strong id="todayMedProgress">0/0</strong><small>TOMAS</small></div><div><strong id="todaySos">0</strong><small>USOS SOS</small></div></div><div class="quick-actions"><button type="button" class="button" id="quickMeasure">+ MEDICIÓN</button><button type="button" class="button secondary" id="quickSos">+ REGISTRAR SOS</button></div></div>
