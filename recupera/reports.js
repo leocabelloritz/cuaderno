@@ -63,7 +63,8 @@ function createPDF(jsPDF,r){
   function write(content,opts={}){
     const size=opts.size||10,weight=opts.bold?'bold':'normal';
     doc.setFont('helvetica',weight);doc.setFontSize(size);doc.setTextColor(...(opts.dim?light:dark));
-    const lines=doc.splitTextToSize(String(content||'—'),opts.width||178);
+    const normalized=String(content||'—').replace(/₂/g,'2').replace(/↻/g,'-').replace(/—/g,'-');
+    const lines=doc.splitTextToSize(normalized,opts.width||178);
     const lh=size*.47;
     space(lines.length*lh+2);doc.text(lines,margin+(opts.indent||0),y);y+=lines.length*lh+2;
   }
@@ -86,7 +87,7 @@ function createPDF(jsPDF,r){
   y+=4;space(17);write('Notas sobre la interpretación',{size:10,bold:true});
   write('Este informe muestra únicamente lo registrado. Un medicamento marcado indica una confirmación de toma, no una administración verificada. Una toma no marcada no demuestra que haya sido omitida.',{size:9,dim:true});
   foot();
-  const end=r.end.toISOString().slice(0,10);
+  const end=r.end.getFullYear()+'-'+String(r.end.getMonth()+1).padStart(2,'0')+'-'+String(r.end.getDate()).padStart(2,'0');
   doc.save('RECUPERA_informe_'+r.days+'d_'+end+'.pdf');
 }
 async function download(){
