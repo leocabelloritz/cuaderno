@@ -193,7 +193,7 @@ const CLOUD_URL='https://qaavgntmnrjfvvccktpv.supabase.co',CLOUD_KEY='sb_publish
 let session=null,owner=null,ready=false,inflight=false,queued=false,timer=null;
 const status=s=>{document.getElementById('cloudStatus').textContent=s},message=s=>{document.getElementById('cloudMessage').textContent=s};
 async function api(path,method='GET',body=null){
- const r=await fetch(CLOUD_URL+path,{method,headers:{apikey:CLOUD_KEY,'Content-Type':'application/json',...(session?{Authorization:'Bearer '+session.access_token}:{})},...(body===null?{}:{body:JSON.stringify(body)})});
+ const r=await fetch(CLOUD_URL+path,{method,headers:{apikey:CLOUD_KEY,'Content-Type':'application/json',...(path.includes('on_conflict=')?{'Prefer':'resolution=merge-duplicates,return=minimal'}:{}),...(session?{Authorization:'Bearer '+session.access_token}:{})},...(body===null?{}:{body:JSON.stringify(body)})});
  const t=await r.text();let j;try{j=JSON.parse(t)}catch(e){j=t}
  if(!r.ok)throw Error(j?.message||j?.msg||j?.error_description||j?.error||'Error HTTP '+r.status);return j
 }
