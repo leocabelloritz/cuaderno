@@ -149,6 +149,40 @@ input[type="datetime-local"]::-webkit-datetime-edit-minute-field{
 .cycleEvent b{color:#b1b6bf;font-size:10px;text-transform:uppercase}.cycleEvent strong{font-size:12px;font-weight:700;overflow-wrap:anywhere}.cycleEvent small{font-size:11px;color:#aeb3bc;overflow-wrap:anywhere}
 @media(max-width:600px){.cycleStats{grid-template-columns:repeat(2,minmax(0,1fr))}.cycleOptions{grid-template-columns:1fr}.cycleReport .actions .button{width:100%}}
 
+
+/* iOS Safari: constrain the report end-date input to its card */
+.cycleOptions,.cycleOptions>div{min-width:0;max-width:100%}
+.cycleOptions #cycleEnd{
+ display:block;
+ box-sizing:border-box;
+ width:100% !important;
+ max-width:100% !important;
+ min-width:0 !important;
+ margin:0;
+ padding:12px 14px;
+ font-size:16px;
+ line-height:1.35;
+ -webkit-appearance:none;
+ appearance:none;
+ overflow:hidden;
+ text-align:left;
+}
+.cycleOptions #cycleEnd::-webkit-date-and-time-value{
+ min-width:0;
+ width:100%;
+ text-align:left;
+}
+.cycleOptions #cycleEnd::-webkit-datetime-edit{
+ min-width:0;
+ max-width:100%;
+ padding:0;
+}
+.cycleOptions #cycleEnd::-webkit-datetime-edit-fields-wrapper{
+ min-width:0;
+ max-width:100%;
+}
+@media(max-width:760px){.cycleOptions{grid-template-columns:minmax(0,1fr) !important}}
+
 </style>
 </head>
 <body><div id="recuperaLaunch" role="status" aria-label="Iniciando RECUPERA" aria-live="off">
